@@ -135,14 +135,14 @@
 			isa = PBXGroup;
 			children = (
 				881045FA2302BC9700C7BD76 /* demo */,
-				881045EE2302A49B00C7BD76 /* WKJSWebVIew */,
+				881045EE2302A49B00C7BD76 /* JSBridge */,
 				88C3152A23B9DA0800E14897 /* MJExtension */,
 				881045FB2302BCBB00C7BD76 /* Support Fiels */,
 			);
 			path = TMEasyJSWebView;
 			sourceTree = "<group>";
 		};
-		881045EE2302A49B00C7BD76 /* WKJSWebVIew */ = {
+		881045EE2302A49B00C7BD76 /* JSBridge */ = {
 			isa = PBXGroup;
 			children = (
 				881045FC2302BD5300C7BD76 /* JSInterface.h */,
@@ -150,7 +150,7 @@
 				881045EF2302A65F00C7BD76 /* JSBridgeWebView.h */,
 				881045F02302A65F00C7BD76 /* JSBridgeWebView.m */,
 			);
-			path = WKJSWebVIew;
+			path = JSBridge;
 			sourceTree = "<group>";
 		};
 		881045FA2302BC9700C7BD76 /* demo */ = {
