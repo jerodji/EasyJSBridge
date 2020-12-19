@@ -1,12 +1,12 @@
 //
-//  WKJSWebView.m
-//  WKEasyJSWebView
+//  JSBridgeWebView.m
+//  WKEasyJSBridgeWebView
 //
 //  Created by 吉久东 on 2019/8/13.
 //  Copyright © 2019 JIJIUDONG. All rights reserved.
 //
 
-#import "WKJSWebView.h"
+#import "JSBridgeWebView.h"
 #import <objc/runtime.h>
 #import "MJExtension.h"
 
@@ -93,9 +93,9 @@ static NSString * const EASY_JS_INJECT_STRING = @"!function () {\
 static NSString * const WKJSMessageHandler = @"NativeListener";
 
 
-#pragma mark - WKJSWebView
+#pragma mark - JSBridgeWebView
 
-@implementation WKJSWebView
+@implementation JSBridgeWebView
 
 /**
  初始化WKWwebView,并将交互类的方法注入JS
@@ -198,7 +198,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
     NSMutableArray <NSString *>* _args = [NSMutableArray new];
     
     if ([message.name isEqualToString:WKJSMessageHandler]) {
-        __weak WKJSWebView *webView = (WKJSWebView *)message.webView;
+        __weak JSBridgeWebView *webView = (JSBridgeWebView *)message.webView;
         NSString *requestString = [message body];
         // native:testWithParams%3Acallback%3A:s%3Aabc%3Af%3A__cb1577786915804
         NSArray *components = [requestString componentsSeparatedByString:@":"];
@@ -292,7 +292,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
 
 @implementation WKJSDataFunction
 
-- (instancetype)initWithWebView:(WKJSWebView *)webView {
+- (instancetype)initWithWebView:(JSBridgeWebView *)webView {
     self = [super init];
     if (self) {
         _webView = webView;

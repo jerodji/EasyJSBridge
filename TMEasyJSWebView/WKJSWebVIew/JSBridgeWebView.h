@@ -1,6 +1,6 @@
 //
-//  WKJSWebView.h
-//  WKEasyJSWebView
+//  JSBridgeWebView.h
+//  WKEasyJSBridgeWebView
 //
 //  Created by 吉久东 on 2019/8/13.
 //  Copyright © 2019 JIJIUDONG. All rights reserved.
@@ -9,9 +9,9 @@
 #import <WebKit/WebKit.h>
 #import <Foundation/Foundation.h>
 
-#pragma mark - WKJSWebView
+#pragma mark - JSBridgeWebView
 
-@interface WKJSWebView : WKWebView
+@interface JSBridgeWebView : WKWebView
 
 - (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration scripts:(NSArray<NSString*>*)scripts withJavascriptInterfaces:(NSDictionary*)interfaces;
 
@@ -36,10 +36,10 @@
 @interface WKJSDataFunction : NSObject
 
 @property (nonatomic, copy) NSString* funcID;
-@property (nonatomic, strong) WKJSWebView *webView;
+@property (nonatomic, strong) JSBridgeWebView *webView;
 @property (nonatomic, assign) BOOL removeAfterExecute;
 
-- (instancetype)initWithWebView:(WKJSWebView*)webView;
+- (instancetype)initWithWebView:(JSBridgeWebView*)webView;
 
 // 回调JS
 - (void)execute:(void (^)(id response, NSError* error))completionHandler;
