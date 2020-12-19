@@ -1,13 +1,12 @@
 //
 //  AppDelegate.m
-//  TMEasyJSWebView
+//  TMEasyJSBridgeWebView
 //
 //  Created by 吉久东 on 2019/8/13.
 //  Copyright © 2019 JIJIUDONG. All rights reserved.
 //
 
 #import "AppDelegate.h"
-#import "FirstVC.h"
 
 @interface AppDelegate ()
 
@@ -17,8 +16,6 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
-//    self.window.rootViewController = [[UINavigationController alloc] initWithRootViewController:[FirstVC new]];
     
     if (@available(iOS 13.0, *)) {
         self.window.overrideUserInterfaceStyle = UIUserInterfaceStyleLight; // iOS13 指定light模式

@@ -24,16 +24,16 @@
 
 @end
 
-#pragma mark - WKJSListener
+#pragma mark - JSBridgeListener
 
-@interface WKJSListener : NSObject<WKNavigationDelegate,WKScriptMessageHandler>
+@interface JSBridgeListener : NSObject<WKNavigationDelegate,WKScriptMessageHandler>
 @property (nonatomic) NSDictionary *javascriptInterfaces;
 @end
 
 
-#pragma mark - WKJSDataFunction
+#pragma mark - JSBridgeDataFunction
 
-@interface WKJSDataFunction : NSObject
+@interface JSBridgeDataFunction : NSObject
 
 @property (nonatomic, copy) NSString* funcID;
 @property (nonatomic, strong) JSBridgeWebView *webView;

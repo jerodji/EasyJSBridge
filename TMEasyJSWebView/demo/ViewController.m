@@ -1,18 +1,18 @@
 //
 //  ViewController.m
-//  TMEasyJSWebView
+//  TMEasyJSBridgeWebView
 //
 //  Created by 吉久东 on 2019/8/13.
 //  Copyright © 2019 JIJIUDONG. All rights reserved.
 //
 
 #import "ViewController.h"
-#import "WKJSWebView.h"
+#import "JSBridgeWebView.h"
 #import "JSInterface.h"
 #import "MJExtension.h"
 
 @interface ViewController ()<WKNavigationDelegate>
-@property (nonatomic, strong) WKJSWebView *webView;
+@property (nonatomic, strong) JSBridgeWebView *webView;
 @end
 
 @implementation ViewController
@@ -21,8 +21,8 @@
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor lightGrayColor];
     
-    CGRect rect = CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height-150);
-    self.webView = [[WKJSWebView alloc] initWithFrame:rect configuration:[WKWebViewConfiguration new] scripts:nil withJavascriptInterfaces:@{@"native":[JSInterface new]}];
+    CGRect rect = CGRectMake(20, 88, self.view.bounds.size.width-40, self.view.bounds.size.height-300);
+    self.webView = [[JSBridgeWebView alloc] initWithFrame:rect configuration:[WKWebViewConfiguration new] scripts:nil withJavascriptInterfaces:@{@"native":[JSInterface new]}];
     self.webView.navigationDelegate = self;
    [self.view addSubview:self.webView];
     
@@ -35,8 +35,8 @@
     [super viewWillAppear:animated];
     
     UILabel* l = [UILabel new];
-    l.text = @"这里灰色部分是原生界面";
-    l.frame = CGRectMake(5, self.view.bounds.size.height - 150, 310, 20);
+    l.text = @"灰色这里是原生界面";
+    l.frame = CGRectMake(20, self.view.bounds.size.height - 150, 310, 20);
     [self.view addSubview:l];
     
     UIButton * b = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -45,14 +45,14 @@
     [b setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
     [b setTitleColor:[UIColor redColor] forState:UIControlStateHighlighted];
     [b addTarget:self action:@selector(nativeButtonClicked) forControlEvents:UIControlEventTouchUpInside];
-    b.frame = CGRectMake(5, self.view.bounds.size.height-100, 310, 50);
+    b.frame = CGRectMake(20, self.view.bounds.size.height-100, 300, 50);
     [self.view addSubview:b];
 }
 
 - (void)nativeButtonClicked {
     NSLog(@"点击了原生按钮");
     [self.webView invokeJSFunction:@"divChangeColor" params:@{@"color": [self Ox_randomColor]} completionHandler:^(id response, NSError *error) {
-        NSLog(@"原生调用JS方法完成.");
+        NSLog(@"回调: 原生调用JS方法完成.");
     }];
 }
 

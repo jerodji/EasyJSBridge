@@ -147,7 +147,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
     [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:injectString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
     
     // add message handler
-    WKJSListener *listener = [[WKJSListener alloc] init];
+    JSBridgeListener *listener = [[JSBridgeListener alloc] init];
     listener.javascriptInterfaces = interfaces;
     [configuration.userContentController addScriptMessageHandler:listener name:WKJSMessageHandler];
     
@@ -189,12 +189,12 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
 @end
 
 
-#pragma mark - WKJSListener
+#pragma mark - JSBridgeListener
 
-@implementation WKJSListener
+@implementation JSBridgeListener
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
-    NSMutableArray <WKJSDataFunction *>* _funcs = [NSMutableArray new];
+    NSMutableArray <JSBridgeDataFunction *>* _funcs = [NSMutableArray new];
     NSMutableArray <NSString *>* _args = [NSMutableArray new];
     
     if ([message.name isEqualToString:WKJSMessageHandler]) {
@@ -248,7 +248,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
                 NSString* argStr = ((NSString*) [formattedArgs objectAtIndex:i + 1]);
                 
                 if ([@"f" isEqualToString:type]){
-                    WKJSDataFunction *func = [[WKJSDataFunction alloc] initWithWebView:webView];
+                    JSBridgeDataFunction *func = [[JSBridgeDataFunction alloc] initWithWebView:webView];
                     func.funcID = argStr;
                     //do this to force retain a reference to it
                     [_funcs addObject:func];
@@ -288,9 +288,9 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
 
 @end
 
-#pragma mark - WKJSDataFunction
+#pragma mark - JSBridgeDataFunction
 
-@implementation WKJSDataFunction
+@implementation JSBridgeDataFunction
 
 - (instancetype)initWithWebView:(JSBridgeWebView *)webView {
     self = [super init];

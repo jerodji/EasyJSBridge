@@ -1,6 +1,6 @@
 //
 //  JSInterface.m
-//  WKEasyJSWebView
+//  WKEasyJSBridgeWebView
 //
 //  Created by 吉久东 on 2019/8/13.
 //  Copyright © 2019 JIJIUDONG. All rights reserved.
@@ -9,7 +9,7 @@
 #import "JSInterface.h"
 #import "MJExtension.h"
 @implementation JSInterface
-- (void)testWithParams:(NSString*)_params callback:(WKJSDataFunction*)_callback
+- (void)testWithParams:(NSString*)_params callback:(JSBridgeDataFunction*)_callback
 {
     //接收h5 参数
     NSLog(@"H5 调 native, 参数 : %@", _params);

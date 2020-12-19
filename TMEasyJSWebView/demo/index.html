@@ -26,17 +26,20 @@
             });
         };
 
+        
         function changeColor(param) {
             let div = document.getElementById("oi");
             div.style.backgroundColor = param.color;
         };
-
+        
+        // 将 changeColor 方法 注册给原生
         window.EasyJS.mount("divChangeColor", changeColor);
+        
     </script>
 </head>
 
 <body>
-    <p>这里是 h5 web 页面</p>
+    <p>白色这里是 web 页面</p>
     <p>1.点击下面按钮,调用原生方法获取随机字母并显示到h5</p>
     <div id="op" class="a" style="background-color: pink;" onclick="getCharacter()"></div>
     <p>2.原生调用h5方法,改变该元素背景色</p>

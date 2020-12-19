@@ -13,7 +13,7 @@
 		881045AC2302A39300C7BD76 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 881045AB2302A39300C7BD76 /* Assets.xcassets */; };
 		881045AF2302A39300C7BD76 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 881045AD2302A39300C7BD76 /* LaunchScreen.storyboard */; };
 		881045B22302A39300C7BD76 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045B12302A39300C7BD76 /* main.m */; };
-		881045F12302A65F00C7BD76 /* WKJSWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045F02302A65F00C7BD76 /* WKJSWebView.m */; };
+		881045F12302A65F00C7BD76 /* JSBridgeWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045F02302A65F00C7BD76 /* JSBridgeWebView.m */; };
 		881045F92302B5ED00C7BD76 /* easy-inject.js in Resources */ = {isa = PBXBuildFile; fileRef = 881045F82302B5ED00C7BD76 /* easy-inject.js */; };
 		881045FE2302BD5300C7BD76 /* JSInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045FD2302BD5300C7BD76 /* JSInterface.m */; };
 		881046002302C10200C7BD76 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 881045FF2302C10200C7BD76 /* index.html */; };
@@ -27,7 +27,6 @@
 		88C3154723B9DA0800E14897 /* NSString+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153A23B9DA0800E14897 /* NSString+MJExtension.m */; };
 		88C3154823B9DA0800E14897 /* MJPropertyKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153B23B9DA0800E14897 /* MJPropertyKey.m */; };
 		88C3154923B9DA0800E14897 /* MJFoundation.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153F23B9DA0800E14897 /* MJFoundation.m */; };
-		88CF83A023BB4E5500B495A9 /* FirstVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 88CF839F23BB4E5500B495A9 /* FirstVC.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,8 +59,8 @@
 		881045B12302A39300C7BD76 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		881045B72302A39400C7BD76 /* WKEasyJSWebViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WKEasyJSWebViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		881045C22302A39400C7BD76 /* WKEasyJSWebViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WKEasyJSWebViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		881045EF2302A65F00C7BD76 /* WKJSWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WKJSWebView.h; sourceTree = "<group>"; };
-		881045F02302A65F00C7BD76 /* WKJSWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WKJSWebView.m; sourceTree = "<group>"; };
+		881045EF2302A65F00C7BD76 /* JSBridgeWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridgeWebView.h; sourceTree = "<group>"; };
+		881045F02302A65F00C7BD76 /* JSBridgeWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridgeWebView.m; sourceTree = "<group>"; };
 		881045F82302B5ED00C7BD76 /* easy-inject.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "easy-inject.js"; sourceTree = "<group>"; };
 		881045FC2302BD5300C7BD76 /* JSInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSInterface.h; sourceTree = "<group>"; };
 		881045FD2302BD5300C7BD76 /* JSInterface.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSInterface.m; sourceTree = "<group>"; };
@@ -87,8 +86,6 @@
 		88C3153D23B9DA0800E14897 /* NSObject+MJKeyValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MJKeyValue.h"; sourceTree = "<group>"; };
 		88C3153E23B9DA0800E14897 /* NSObject+MJCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MJCoding.h"; sourceTree = "<group>"; };
 		88C3153F23B9DA0800E14897 /* MJFoundation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJFoundation.m; sourceTree = "<group>"; };
-		88CF839E23BB4E5500B495A9 /* FirstVC.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirstVC.h; sourceTree = "<group>"; };
-		88CF839F23BB4E5500B495A9 /* FirstVC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FirstVC.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -150,8 +147,8 @@
 			children = (
 				881045FC2302BD5300C7BD76 /* JSInterface.h */,
 				881045FD2302BD5300C7BD76 /* JSInterface.m */,
-				881045EF2302A65F00C7BD76 /* WKJSWebView.h */,
-				881045F02302A65F00C7BD76 /* WKJSWebView.m */,
+				881045EF2302A65F00C7BD76 /* JSBridgeWebView.h */,
+				881045F02302A65F00C7BD76 /* JSBridgeWebView.m */,
 			);
 			path = WKJSWebVIew;
 			sourceTree = "<group>";
@@ -161,8 +158,6 @@
 			children = (
 				881045A22302A39000C7BD76 /* AppDelegate.h */,
 				881045A32302A39000C7BD76 /* AppDelegate.m */,
-				88CF839E23BB4E5500B495A9 /* FirstVC.h */,
-				88CF839F23BB4E5500B495A9 /* FirstVC.m */,
 				881045A52302A39000C7BD76 /* ViewController.h */,
 				881045A62302A39000C7BD76 /* ViewController.m */,
 				881045FF2302C10200C7BD76 /* index.html */,
@@ -344,7 +339,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				881045FE2302BD5300C7BD76 /* JSInterface.m in Sources */,
-				88CF83A023BB4E5500B495A9 /* FirstVC.m in Sources */,
 				88C3154023B9DA0800E14897 /* MJPropertyType.m in Sources */,
 				881045A72302A39000C7BD76 /* ViewController.m in Sources */,
 				88C3154223B9DA0800E14897 /* MJProperty.m in Sources */,
@@ -356,7 +350,7 @@
 				88C3154123B9DA0800E14897 /* NSObject+MJKeyValue.m in Sources */,
 				88C3154323B9DA0800E14897 /* NSObject+MJCoding.m in Sources */,
 				881045A42302A39000C7BD76 /* AppDelegate.m in Sources */,
-				881045F12302A65F00C7BD76 /* WKJSWebView.m in Sources */,
+				881045F12302A65F00C7BD76 /* JSBridgeWebView.m in Sources */,
 				88C3154823B9DA0800E14897 /* MJPropertyKey.m in Sources */,
 				88C3154923B9DA0800E14897 /* MJFoundation.m in Sources */,
 			);
