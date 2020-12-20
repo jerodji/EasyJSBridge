@@ -1,8 +1,8 @@
 !function () {
-    if (window.EasyJS) {
+    if (window.JSBridge) {
         return;
     }
-    window.EasyJS = {
+    window.JSBridge = {
         /**
          * 存放JS的回调函数
          */
@@ -18,8 +18,8 @@
          * @param {String} funcName js方法名
          * @param {Function} handler js方法
          */
-        mount: function (funcName, handler) {
-            EasyJS.__events[funcName] = handler;
+        registor: function (funcName, handler) {
+            JSBridge.__events[funcName] = handler;
         },
 
         /**
@@ -27,8 +27,8 @@
          * @param {String} funcID js方法名
          * @param {JSON} paramsJson 参数
          */
-        invokeJS: function (funcID, paramsJson) {
-            let handler = EasyJS.__events[funcID];
+        _invokeJS: function (funcID, paramsJson) {
+            let handler = JSBridge.__events[funcID];
             if (handler && typeof (handler) === 'function') {
                 let args = '';
                 try {
@@ -53,7 +53,7 @@
          * @param {String} cbID 函数ID
          * @param {Boolean} removeAfterExecute 执行后是否从__callbacks中否移除此回调函数
          */
-        invokeCallback: function (cbID, removeAfterExecute) {
+        _invokeCallback: function (cbID, removeAfterExecute) {
             let args = Array.prototype.slice.call(arguments);
             args.shift(); // __cb1577786915804
             args.shift(); // false
@@ -62,9 +62,9 @@
                 args[i] = decodeURIComponent(args[i]);
             }
 
-            let cb = EasyJS.__callbacks[cbID];
+            let cb = JSBridge.__callbacks[cbID];
             if (removeAfterExecute) {
-                EasyJS.__callbacks[cbID] = undefined;
+                JSBridge.__callbacks[cbID] = undefined;
             }
             return cb.apply(null, args);
         },
@@ -75,16 +75,16 @@
          * @param {String} functionName 
          * @param {Array} args 
          */
-        call: function (obj, functionName, args) {
+        _call: function (obj, functionName, args) {
             let formattedArgs = [];
             for (let i = 0, l = args.length; i < l; i++) {
                 if (typeof args[i] == 'function') {
-                    formattedArgs.push('f');
+                    formattedArgs.push('func');
                     let cbID = '__cb' + (+new Date) + Math.random();
-                    EasyJS.__callbacks[cbID] = args[i];
+                    JSBridge.__callbacks[cbID] = args[i];
                     formattedArgs.push(cbID);
                 } else {
-                    formattedArgs.push('s');
+                    formattedArgs.push('arg');
                     formattedArgs.push(encodeURIComponent(args[i]));
                 }
             }
@@ -93,8 +93,8 @@
             /** NativeListener 要与原生中addScriptMessageHandler的name保持一致 */
             window.webkit.messageHandlers.NativeListener.postMessage(obj + ':' + encodeURIComponent(functionName) + argStr);
 
-            let ret = EasyJS.retValue;
-            EasyJS.retValue = undefined;
+            let ret = JSBridge.retValue;
+            JSBridge.retValue = undefined;
 
             if (ret) {
                 return decodeURIComponent(ret);
@@ -105,20 +105,25 @@
          * native用来给window添加obj的对象与方法
          * @param {String} obj 添加到window上的对象
          * @param {Array<String>} methods 添加到obj上的方法数组
+         * "JSBridge.inject(\"native\", [\"testWithParams:callback:\"]);"
          */
-        inject: function (obj, methods) {
-            window[obj] = {};
-            let jsObj = window[obj];
+        _inject: function (obj, methods) {
+            JSBridge[obj] = {};
+            let jsObj = JSBridge[obj];
 
             for (let i = 0, l = methods.length; i < l; i++) {
                 (function () {
                     let method = methods[i];
                     let jsMethod = method.replace(new RegExp(':', 'g'), '');
                     jsObj[jsMethod] = function () {
-                        return EasyJS.call(obj, method, Array.prototype.slice.call(arguments));
+                        return JSBridge._call(obj, method, Array.prototype.slice.call(arguments));
                     };
                 })();
             }
         }
+
+        // callNative: function (methodName, params, callback) {
+            
+        // },
     };
 }()

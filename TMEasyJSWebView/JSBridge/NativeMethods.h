@@ -1,5 +1,5 @@
 //
-//  JSInterface.h
+//  NativeMethods.h
 //  WKEasyJSBridgeWebView
 //
 //  Created by 吉久东 on 2019/8/13.
@@ -8,6 +8,6 @@
 
 #import <Foundation/Foundation.h>
 #import "JSBridgeWebView.h"
-@interface JSInterface : NSObject
+@interface NativeMethods : NSObject
 - (void)testWithParams:(NSString*)_params callback:(JSBridgeDataFunction*)_callback;
 @end

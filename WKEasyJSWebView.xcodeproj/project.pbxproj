@@ -15,7 +15,7 @@
 		881045B22302A39300C7BD76 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045B12302A39300C7BD76 /* main.m */; };
 		881045F12302A65F00C7BD76 /* JSBridgeWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045F02302A65F00C7BD76 /* JSBridgeWebView.m */; };
 		881045F92302B5ED00C7BD76 /* easy-inject.js in Resources */ = {isa = PBXBuildFile; fileRef = 881045F82302B5ED00C7BD76 /* easy-inject.js */; };
-		881045FE2302BD5300C7BD76 /* JSInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045FD2302BD5300C7BD76 /* JSInterface.m */; };
+		881045FE2302BD5300C7BD76 /* NativeMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045FD2302BD5300C7BD76 /* NativeMethods.m */; };
 		881046002302C10200C7BD76 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 881045FF2302C10200C7BD76 /* index.html */; };
 		88C3154023B9DA0800E14897 /* MJPropertyType.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3152E23B9DA0800E14897 /* MJPropertyType.m */; };
 		88C3154123B9DA0800E14897 /* NSObject+MJKeyValue.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153123B9DA0800E14897 /* NSObject+MJKeyValue.m */; };
@@ -27,6 +27,7 @@
 		88C3154723B9DA0800E14897 /* NSString+MJExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153A23B9DA0800E14897 /* NSString+MJExtension.m */; };
 		88C3154823B9DA0800E14897 /* MJPropertyKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153B23B9DA0800E14897 /* MJPropertyKey.m */; };
 		88C3154923B9DA0800E14897 /* MJFoundation.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153F23B9DA0800E14897 /* MJFoundation.m */; };
+		FA1A3F49258F583400384BC0 /* JSMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1A3F48258F583400384BC0 /* JSMethods.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -62,8 +63,8 @@
 		881045EF2302A65F00C7BD76 /* JSBridgeWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridgeWebView.h; sourceTree = "<group>"; };
 		881045F02302A65F00C7BD76 /* JSBridgeWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridgeWebView.m; sourceTree = "<group>"; };
 		881045F82302B5ED00C7BD76 /* easy-inject.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "easy-inject.js"; sourceTree = "<group>"; };
-		881045FC2302BD5300C7BD76 /* JSInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSInterface.h; sourceTree = "<group>"; };
-		881045FD2302BD5300C7BD76 /* JSInterface.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSInterface.m; sourceTree = "<group>"; };
+		881045FC2302BD5300C7BD76 /* NativeMethods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeMethods.h; sourceTree = "<group>"; };
+		881045FD2302BD5300C7BD76 /* NativeMethods.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeMethods.m; sourceTree = "<group>"; };
 		881045FF2302C10200C7BD76 /* index.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = index.html; sourceTree = "<group>"; };
 		88C3152B23B9DA0800E14897 /* MJPropertyKey.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJPropertyKey.h; sourceTree = "<group>"; };
 		88C3152C23B9DA0800E14897 /* NSObject+MJClass.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MJClass.h"; sourceTree = "<group>"; };
@@ -86,6 +87,8 @@
 		88C3153D23B9DA0800E14897 /* NSObject+MJKeyValue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MJKeyValue.h"; sourceTree = "<group>"; };
 		88C3153E23B9DA0800E14897 /* NSObject+MJCoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+MJCoding.h"; sourceTree = "<group>"; };
 		88C3153F23B9DA0800E14897 /* MJFoundation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJFoundation.m; sourceTree = "<group>"; };
+		FA1A3F47258F583400384BC0 /* JSMethods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSMethods.h; sourceTree = "<group>"; };
+		FA1A3F48258F583400384BC0 /* JSMethods.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSMethods.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -145,10 +148,12 @@
 		881045EE2302A49B00C7BD76 /* JSBridge */ = {
 			isa = PBXGroup;
 			children = (
-				881045FC2302BD5300C7BD76 /* JSInterface.h */,
-				881045FD2302BD5300C7BD76 /* JSInterface.m */,
 				881045EF2302A65F00C7BD76 /* JSBridgeWebView.h */,
 				881045F02302A65F00C7BD76 /* JSBridgeWebView.m */,
+				881045FC2302BD5300C7BD76 /* NativeMethods.h */,
+				881045FD2302BD5300C7BD76 /* NativeMethods.m */,
+				FA1A3F47258F583400384BC0 /* JSMethods.h */,
+				FA1A3F48258F583400384BC0 /* JSMethods.m */,
 			);
 			path = JSBridge;
 			sourceTree = "<group>";
@@ -338,13 +343,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				881045FE2302BD5300C7BD76 /* JSInterface.m in Sources */,
+				881045FE2302BD5300C7BD76 /* NativeMethods.m in Sources */,
 				88C3154023B9DA0800E14897 /* MJPropertyType.m in Sources */,
 				881045A72302A39000C7BD76 /* ViewController.m in Sources */,
 				88C3154223B9DA0800E14897 /* MJProperty.m in Sources */,
 				88C3154523B9DA0800E14897 /* NSObject+MJProperty.m in Sources */,
 				88C3154623B9DA0800E14897 /* NSObject+MJClass.m in Sources */,
 				88C3154423B9DA0800E14897 /* MJExtensionConst.m in Sources */,
+				FA1A3F49258F583400384BC0 /* JSMethods.m in Sources */,
 				881045B22302A39300C7BD76 /* main.m in Sources */,
 				88C3154723B9DA0800E14897 /* NSString+MJExtension.m in Sources */,
 				88C3154123B9DA0800E14897 /* NSObject+MJKeyValue.m in Sources */,
@@ -521,17 +527,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = TSXV88UR28;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P2ZL3LJVPZ;
 				INFOPLIST_FILE = TMEasyJSWebView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.pingan.check;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Pnlyy.jsb;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = InpatientWardRound_Profile_Dev;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -540,17 +547,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_STYLE = Manual;
-				DEVELOPMENT_TEAM = TSXV88UR28;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P2ZL3LJVPZ;
 				INFOPLIST_FILE = TMEasyJSWebView/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.pingan.check;
+				PRODUCT_BUNDLE_IDENTIFIER = com.Pnlyy.jsb;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE_SPECIFIER = InpatientWardRound_Profile_Dev;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

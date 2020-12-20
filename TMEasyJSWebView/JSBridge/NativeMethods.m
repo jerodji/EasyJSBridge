@@ -1,14 +1,14 @@
 //
-//  JSInterface.m
+//  NativeMethods.m
 //  WKEasyJSBridgeWebView
 //
 //  Created by 吉久东 on 2019/8/13.
 //  Copyright © 2019 JIJIUDONG. All rights reserved.
 //
 
-#import "JSInterface.h"
+#import "NativeMethods.h"
 #import "MJExtension.h"
-@implementation JSInterface
+@implementation NativeMethods
 - (void)testWithParams:(NSString*)_params callback:(JSBridgeDataFunction*)_callback
 {
     //接收h5 参数

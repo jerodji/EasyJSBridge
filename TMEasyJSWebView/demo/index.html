@@ -18,12 +18,25 @@
     </style>
     <script>
         function getCharacter() {
-            window.native.testWithParamscallback('abc', (p1, p2, p3) => {
+            // var ob = JSON.parse(JSBridge);
+            // let msgDiv = document.getElementById("msg");
+            // msgDiv.innerHTML = ob;
+
+            // window.native.testWithParamscallback('abc', (p1, p2, p3) => {
+            JSBridge.native.testWithParamscallback('abc', (p1, p2, p3) => {
+            // JSBridge.testWithParamscallback('abc', (p1, p2, p3) => {
                 console.log(p1, p2, p3);
                 var obj1 = JSON.parse(p1);
                 let div = document.getElementById("op");
                 div.innerHTML = obj1.letter;
             });
+
+
+            // JSBridge.callNative('testWithParamscallback', 'abc', (p1, p2, p3)=>{
+            //     var obj1 = JSON.parse(p1);
+            //     let div = document.getElementById("op");
+            //     div.innerHTML = obj1.letter;
+            // });
         };
 
         
@@ -31,9 +44,8 @@
             let div = document.getElementById("oi");
             div.style.backgroundColor = param.color;
         };
-        
         // 将 changeColor 方法 注册给原生
-        window.EasyJS.mount("divChangeColor", changeColor);
+        JSBridge.registor("divChangeColor", changeColor);
         
     </script>
 </head>
@@ -44,6 +56,7 @@
     <div id="op" class="a" style="background-color: pink;" onclick="getCharacter()"></div>
     <p>2.原生调用h5方法,改变该元素背景色</p>
     <div id="oi" class="a" style="background-color: aqua;" onclick="changeColor()"></div>
+    <!-- <div id="msg" class="a" style="background-color: orange;" onclick="getCharacter()"></div> -->
 </body>
 
 </html>

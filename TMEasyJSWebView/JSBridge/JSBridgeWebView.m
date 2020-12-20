@@ -1,6 +1,6 @@
 //
 //  JSBridgeWebView.m
-//  WKEasyJSBridgeWebView
+//  WKJSBridgeBridgeWebView
 //
 //  Created by 吉久东 on 2019/8/13.
 //  Copyright © 2019 JIJIUDONG. All rights reserved.
@@ -11,17 +11,17 @@
 #import "MJExtension.h"
 
 static NSString * const EASY_JS_INJECT_STRING = @"!function () {\
-    if (window.EasyJS) {\
+    if (window.JSBridge) {\
         return;\
     }\
-    window.EasyJS = {\
+    window.JSBridge = {\
         __callbacks: {},\
         __events: {},\
-        mount: function (funcName, handler) {\
-            EasyJS.__events[funcName] = handler;\
+        registor: function (funcName, handler) {\
+            JSBridge.__events[funcName] = handler;\
         },\
-        invokeJS: function (funcID, paramsJson) {\
-            let handler = EasyJS.__events[funcID];\
+        _invokeJS: function (funcID, paramsJson) {\
+            let handler = JSBridge.__events[funcID];\
             if (handler && typeof (handler) === 'function') {\
                 let args = '';\
                 try {\
@@ -40,49 +40,49 @@ static NSString * const EASY_JS_INJECT_STRING = @"!function () {\
                console.log(funcID + '函数未定义');\
             }\
         },\
-        invokeCallback: function (cbID, removeAfterExecute) {\
+        _invokeCallback: function (cbID, removeAfterExecute) {\
             let args = Array.prototype.slice.call(arguments);\
             args.shift();\
             args.shift();\
             for (let i = 0, l = args.length; i < l; i++) {\
                 args[i] = decodeURIComponent(args[i]);\
             }\
-            let cb = EasyJS.__callbacks[cbID];\
+            let cb = JSBridge.__callbacks[cbID];\
             if (removeAfterExecute) {\
-                EasyJS.__callbacks[cbID] = undefined;\
+                JSBridge.__callbacks[cbID] = undefined;\
             }\
             return cb.apply(null, args);\
         },\
-        call: function (obj, functionName, args) {\
+        _call: function (obj, functionName, args) {\
             let formattedArgs = [];\
             for (let i = 0, l = args.length; i < l; i++) {\
                 if (typeof args[i] == 'function') {\
-                    formattedArgs.push('f');\
+                    formattedArgs.push('func');\
                     let cbID = '__cb' + (+new Date) + Math.random();\
-                    EasyJS.__callbacks[cbID] = args[i];\
+                    JSBridge.__callbacks[cbID] = args[i];\
                     formattedArgs.push(cbID);\
                 } else {\
-                    formattedArgs.push('s');\
+                    formattedArgs.push('arg');\
                     formattedArgs.push(encodeURIComponent(args[i]));\
                 }\
             }\
             let argStr = (formattedArgs.length > 0 ? ':' + encodeURIComponent(formattedArgs.join(':')) : '');\
             window.webkit.messageHandlers.NativeListener.postMessage(obj + ':' + encodeURIComponent(functionName) + argStr);\
-            let ret = EasyJS.retValue;\
-            EasyJS.retValue = undefined;\
+            let ret = JSBridge.retValue;\
+            JSBridge.retValue = undefined;\
             if (ret) {\
                 return decodeURIComponent(ret);\
             }\
         },\
-        inject: function (obj, methods) {\
-            window[obj] = {};\
-            let jsObj = window[obj];\
+        _inject: function (obj, methods) {\
+            JSBridge[obj] = {};\
+            let jsObj = JSBridge[obj];\
             for (let i = 0, l = methods.length; i < l; i++) {\
                 (function () {\
                     let method = methods[i];\
                     let jsMethod = method.replace(new RegExp(':', 'g'), '');\
                     jsObj[jsMethod] = function () {\
-                        return EasyJS.call(obj, method, Array.prototype.slice.call(arguments));\
+                        return JSBridge._call(obj, method, Array.prototype.slice.call(arguments));\
                     };\
                 })();\
             }\
@@ -100,7 +100,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
 /**
  初始化WKWwebView,并将交互类的方法注入JS
  */
-- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration scripts:(NSArray<NSString*>*)scripts withJavascriptInterfaces:(NSDictionary*)interfaces
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration scripts:(NSArray<NSString*>*)scripts javascriptInterfaces:(NSDictionary*)interfaces
 {
     if (!configuration) {
         configuration = [[WKWebViewConfiguration alloc] init];
@@ -118,7 +118,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
     
     NSMutableString* injectString = [[NSMutableString alloc] init];
     for(NSString *key in [interfaces allKeys]) {
-        [injectString appendString:@"EasyJS.inject(\""];
+        [injectString appendString:@"JSBridge._inject(\""];
         [injectString appendString:key];
         [injectString appendString:@"\", ["];
         NSObject* interfaceObj = [interfaces objectForKey:key];
@@ -139,7 +139,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
                 cls = cls.superclass;
             }
         }
-        [injectString appendString:@"]);"]; //@"EasyJS.inject(\"native\", [\"testWithParams:callback:\"]);"
+        [injectString appendString:@"]);"]; //@"JSBridge._inject(\"native\", [\"testWithParams:callback:\"]);"
     }
 #ifdef DEBUG
     NSLog(@"injectString :\n%@", injectString);
@@ -151,7 +151,6 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
     listener.javascriptInterfaces = interfaces;
     [configuration.userContentController addScriptMessageHandler:listener name:WKJSMessageHandler];
     
-    // init
     self = [super initWithFrame:frame configuration:configuration];
     return self;
 }
@@ -182,7 +181,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
      paramJson = [paramJson stringByReplacingOccurrencesOfString:@"\u2028" withString:@"\\u2028"];
      paramJson = [paramJson stringByReplacingOccurrencesOfString:@"\u2029" withString:@"\\u2029"];
     
-    NSString *script = [NSString stringWithFormat:@"%@('%@', '%@')", @"window.EasyJS.invokeJS", jsFuncName,  paramJson];
+    NSString *script = [NSString stringWithFormat:@"%@('%@', '%@')", @"window.JSBridge._invokeJS", jsFuncName,  paramJson];
     [self wk_evaluateJavaScript:script completionHandler:completionHandler];
 }
 
@@ -194,6 +193,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
 @implementation JSBridgeListener
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+    
     NSMutableArray <JSBridgeDataFunction *>* _funcs = [NSMutableArray new];
     NSMutableArray <NSString *>* _args = [NSMutableArray new];
     
@@ -232,30 +232,33 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
         NSInvocation* invoker = [NSInvocation invocationWithMethodSignature:sig];
         invoker.selector = selector;
         invoker.target = interface;
-        if ([components count] > 2){
+        if ([components count] > 2)
+        {
             NSString *argsAsString = [(NSString*)[components objectAtIndex:2] stringByRemovingPercentEncoding];
             NSArray* formattedArgs = [argsAsString componentsSeparatedByString:@":"];
             if ((sig.numberOfArguments - 2) != [formattedArgs count] / 2) {
-                // 方法签名获取到实际实现的方法的参数个数 != js调用方法时传参个数
-                NSString *assertDesc = [NSString stringWithFormat:@"*** -[%@ %@]: oc的交互方法参数个数%@，js调用方法时传参个数%@",NSStringFromClass([interface class]),method,@(sig.numberOfArguments - 2),@([formattedArgs count] / 2)];
-                //  因为pod报警告，所以加上这句，实际没有意义
+                // 方法签名获取到实际实现的方法的参数个数 ≠ js调用方法时传参个数
+                NSString *assertDesc = [NSString stringWithFormat:@"*** -[%@ %@]: OC的交互方法参数个数%@，js调用方法时传参个数%@",NSStringFromClass([interface class]),method,@(sig.numberOfArguments - 2),@([formattedArgs count] / 2)];
                 assertDesc = assertDesc ? : @"";
                 NSAssert(NO, assertDesc);
                 return;
             }
+            
             for (unsigned long i = 0, j = 0, l = [formattedArgs count]; i < l; i+=2, j++){
+                
                 NSString* type = ((NSString*) [formattedArgs objectAtIndex:i]);
                 NSString* argStr = ((NSString*) [formattedArgs objectAtIndex:i + 1]);
                 
-                if ([@"f" isEqualToString:type]){
+                if ([type isEqualToString:@"func"]) {
+                    
                     JSBridgeDataFunction *func = [[JSBridgeDataFunction alloc] initWithWebView:webView];
                     func.funcID = argStr;
-                    //do this to force retain a reference to it
                     [_funcs addObject:func];
                     [invoker setArgument:&func atIndex:(j + 2)];
-                }else if ([@"s" isEqualToString:type]){
+                
+                } else if ([type isEqualToString:@"arg"]) {
+                    
                     NSString* arg = [argStr stringByRemovingPercentEncoding];
-                    //do this to force retain a reference to it
                     [_args addObject:arg];
                     [invoker setArgument:&arg atIndex:(j + 2)];
                 }
@@ -265,25 +268,25 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
         [invoker invoke];
         
         //return the value by using javascript
-        if ([sig methodReturnLength] > 0){
+        if ([sig methodReturnLength] > 0) {
             __unsafe_unretained NSString* tmpRetValue;
             [invoker getReturnValue:&tmpRetValue];
             NSString *retValue = tmpRetValue;
             
-            if (retValue == NULL || retValue == nil){
-                [webView wk_evaluateJavaScript:@"EasyJS.retValue=null;" completionHandler:nil];
-            }else{
+            if (retValue == NULL || retValue == nil) {
+                [webView wk_evaluateJavaScript:@"JSBridge.retValue=null;" completionHandler:nil];
+            } else {
                 retValue = [retValue stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet letterCharacterSet]];
-                retValue = [@"" stringByAppendingFormat:@"EasyJS.retValue=\"%@\";", retValue];
+                retValue = [@"" stringByAppendingFormat:@"JSBridge.retValue=\"%@\";", retValue];
                 [webView wk_evaluateJavaScript:retValue completionHandler:nil];
             }
         }
     }
     
-    //clean up any retained funcs
+    //clean up any retained funcs/args
     [_funcs removeAllObjects];
-    //clean up any retained args
     [_args removeAllObjects];
+    
 }
 
 @end
@@ -325,7 +328,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
     }
     
     NSMutableString* injection = [[NSMutableString alloc] init];
-    [injection appendFormat:@"EasyJS.invokeCallback(\"%@\", %@", self.funcID, self.removeAfterExecute ? @"true" : @"false"];
+    [injection appendFormat:@"JSBridge._invokeCallback(\"%@\", %@", self.funcID, self.removeAfterExecute ? @"true" : @"false"];
     
     if (args) {
         for (unsigned long i = 0, l = args.count; i < l; i++){

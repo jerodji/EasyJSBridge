@@ -7,9 +7,11 @@
 //
 
 #import "ViewController.h"
-#import "JSBridgeWebView.h"
-#import "JSInterface.h"
 #import "MJExtension.h"
+
+#import "JSBridgeWebView.h"
+#import "NativeMethods.h"
+#import "JSMethods.h"
 
 @interface ViewController ()<WKNavigationDelegate>
 @property (nonatomic, strong) JSBridgeWebView *webView;
@@ -22,7 +24,7 @@
     self.view.backgroundColor = [UIColor lightGrayColor];
     
     CGRect rect = CGRectMake(20, 88, self.view.bounds.size.width-40, self.view.bounds.size.height-300);
-    self.webView = [[JSBridgeWebView alloc] initWithFrame:rect configuration:[WKWebViewConfiguration new] scripts:nil withJavascriptInterfaces:@{@"native":[JSInterface new]}];
+    self.webView = [[JSBridgeWebView alloc] initWithFrame:rect configuration:[WKWebViewConfiguration new] scripts:nil javascriptInterfaces:@{@"native":[NativeMethods new]}];
     self.webView.navigationDelegate = self;
    [self.view addSubview:self.webView];
     
@@ -51,7 +53,7 @@
 
 - (void)nativeButtonClicked {
     NSLog(@"点击了原生按钮");
-    [self.webView invokeJSFunction:@"divChangeColor" params:@{@"color": [self Ox_randomColor]} completionHandler:^(id response, NSError *error) {
+    [self.webView invokeJSFunction:JS_CHANGE_COLOR params:@{@"color": [self Ox_randomColor]} completionHandler:^(id response, NSError *error) {
         NSLog(@"回调: 原生调用JS方法完成.");
     }];
 }
