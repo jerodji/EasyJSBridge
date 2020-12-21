@@ -105,20 +105,15 @@
          * native用来给window添加obj的对象与方法
          * @param {String} obj 添加到window上的对象
          * @param {Array<String>} methods 添加到obj上的方法数组
-         * "JSBridge.inject(\"native\", [\"testWithParams:callback:\"]);"
+         * "JSBridge._inject(\"native\", [\"testWithParams:callback:\"]);"
          */
         _inject: function (obj, methods) {
-            JSBridge[obj] = {};
-            let jsObj = JSBridge[obj];
-
-            for (let i = 0, l = methods.length; i < l; i++) {
-                (function () {
-                    let method = methods[i];
-                    let jsMethod = method.replace(new RegExp(':', 'g'), '');
-                    jsObj[jsMethod] = function () {
-                        return JSBridge._call(obj, method, Array.prototype.slice.call(arguments));
-                    };
-                })();
+            for (let i = 0 , l = methods.length; i < l; i++) {
+                let method = methods[i];
+                let jsMethod = method.replace(new RegExp(':', 'g'), '');
+                JSBridge[jsMethod] = function () {
+                    return JSBridge._call(obj, method, Array.prototype.slice.call(arguments));
+                };
             }
         }
         
