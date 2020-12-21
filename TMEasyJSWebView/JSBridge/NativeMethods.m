@@ -8,6 +8,7 @@
 
 #import "NativeMethods.h"
 #import "MJExtension.h"
+
 @implementation NativeMethods
 - (void)testWithParams:(NSString*)_params callback:(JSBridgeDataFunction*)_callback
 {
@@ -24,4 +25,9 @@
         NSLog(@"completionHandler");
     }];
 }
+
+- (void)log:(NSString *)params {
+    NSLog(@"[JS] : %@", params);
+}
+
 @end

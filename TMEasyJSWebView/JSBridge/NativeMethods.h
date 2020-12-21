@@ -7,7 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "JSBridgeWebView.h"
+#import "JSBridge.h"
+
 @interface NativeMethods : NSObject
 - (void)testWithParams:(NSString*)_params callback:(JSBridgeDataFunction*)_callback;
+- (void)log:(NSString*)params;
 @end

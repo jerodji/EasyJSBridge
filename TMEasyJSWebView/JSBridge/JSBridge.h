@@ -1,13 +1,15 @@
 //
-//  JSBridgeWebView.h
-//  WKEasyJSBridgeWebView
+//  JSBridge.h
+//  WKEasyJSWebView
 //
-//  Created by 吉久东 on 2019/8/13.
-//  Copyright © 2019 JIJIUDONG. All rights reserved.
+//  Created by Jerod on 2020/12/21.
+//  Copyright © 2020 JIJIUDONG. All rights reserved.
 //
 
-#import <WebKit/WebKit.h>
 #import <Foundation/Foundation.h>
+//#import "JSBridgeWebView.h"
+#import <WebKit/WebKit.h>
+
 
 #pragma mark - JSBridgeWebView
 
@@ -16,19 +18,35 @@
 - (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration scripts:(NSArray<NSString*>*)scripts javascriptInterfaces:(NSDictionary*)interfaces;
 
 /// 主线程执行js
-- (void)wk_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler;
+- (void)main_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler;
 
 /// native 调用 h5 方法
 - (void)invokeJSFunction:(NSString*)jsFuncName params:(id)params completionHandler:(void (^)(id response, NSError *error))completionHandler;
 
+@end
+
+
+
+#pragma mark - JSBridge
+
+@interface JSBridge : NSObject
+
+@property (nonatomic, copy, readonly) NSString *cachedScripts;///< cache scripts
+@property (nonatomic, copy, readonly) NSDictionary *cachedInterfaces;///< cache interfaces
+
++ (instancetype)shared;
+- (void)cacheScriptsWithInterfaces:(NSDictionary*)interfaces;
 
 @end
+
+
 
 #pragma mark - JSBridgeListener
 
 @interface JSBridgeListener : NSObject<WKNavigationDelegate,WKScriptMessageHandler>
 @property (nonatomic) NSDictionary *javascriptInterfaces;
 @end
+
 
 
 #pragma mark - JSBridgeDataFunction
@@ -47,4 +65,3 @@
 - (void)executeWithParams:(NSArray *)params completionHandler:(void (^)(id response, NSError* error))completionHandler;
 
 @end
-

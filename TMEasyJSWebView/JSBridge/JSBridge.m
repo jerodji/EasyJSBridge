@@ -1,14 +1,15 @@
 //
-//  JSBridgeWebView.m
-//  WKJSBridgeBridgeWebView
+//  JSBridge.m
+//  WKEasyJSWebView
 //
-//  Created by 吉久东 on 2019/8/13.
-//  Copyright © 2019 JIJIUDONG. All rights reserved.
+//  Created by Jerod on 2020/12/21.
+//  Copyright © 2020 JIJIUDONG. All rights reserved.
 //
 
-#import "JSBridgeWebView.h"
+#import "JSBridge.h"
 #import <objc/runtime.h>
 #import "MJExtension.h"
+
 
 static NSString * const EASY_JS_INJECT_STRING = @"!function () {\
     if (window.JSBridge) {\
@@ -86,7 +87,9 @@ static NSString * const EASY_JS_INJECT_STRING = @"!function () {\
     };\
 }()";
 
-static NSString * const WKJSMessageHandler = @"NativeListener";
+
+static NSString * const EASY_JS_MSG_HANDLER = @"NativeListener";
+
 
 
 #pragma mark - JSBridgeWebView
@@ -106,52 +109,56 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
     }
     
     // add script
+    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:EASY_JS_INJECT_STRING injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
+    
     for (NSString* script in scripts) {
         [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:script injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
     }
     
-    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:EASY_JS_INJECT_STRING injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
-    
-    NSMutableString* injectString = [[NSMutableString alloc] init];
-    for(NSString *key in [interfaces allKeys]) {
-        [injectString appendString:@"JSBridge._inject(\""];
-        [injectString appendString:key];
-        [injectString appendString:@"\", ["];
-        NSObject* interfaceObj = [interfaces objectForKey:key];
-        if ([interfaceObj isKindOfClass:[NSObject class]]) {
-            Class cls = object_getClass(interfaceObj);
-            while (cls != [NSObject class]) {
-                unsigned int mc = 0;
-                Method * mlist = class_copyMethodList(cls, &mc);
-                for (int i = 0; i < mc; i++) {
-                    [injectString appendString:@"\""];
-                    [injectString appendString:[NSString stringWithUTF8String:sel_getName(method_getName(mlist[i]))]];
-                    [injectString appendString:@"\""];
-                    if ((i != mc - 1) || (cls.superclass != [NSObject class])) {
-                        [injectString appendString:@", "];
+    // 使用缓存可避免这段循环代码,加快执行速度
+    if (interfaces && ![JSBridge shared].cachedScripts) {
+        
+        NSMutableString* injectString = [[NSMutableString alloc] init];
+        for(NSString *key in [interfaces allKeys]) {
+            [injectString appendString:@"JSBridge._inject(\""];
+            [injectString appendString:key];
+            [injectString appendString:@"\", ["];
+            NSObject* interfaceObj = [interfaces objectForKey:key];
+            if ([interfaceObj isKindOfClass:[NSObject class]]) {
+                Class cls = object_getClass(interfaceObj);
+                while (cls != [NSObject class]) {
+                    unsigned int mc = 0;
+                    Method * mlist = class_copyMethodList(cls, &mc);
+                    for (int i = 0; i < mc; i++) {
+                        [injectString appendString:@"\""];
+                        [injectString appendString:[NSString stringWithUTF8String:sel_getName(method_getName(mlist[i]))]];
+                        [injectString appendString:@"\""];
+                        if ((i != mc - 1) || (cls.superclass != [NSObject class])) {
+                            [injectString appendString:@", "];
+                        }
                     }
+                    free(mlist);
+                    cls = cls.superclass;
                 }
-                free(mlist);
-                cls = cls.superclass;
             }
+            [injectString appendString:@"]);"]; //@"JSBridge._inject(\"native\", [\"testWithParams:callback:\"]);"
         }
-        [injectString appendString:@"]);"]; //@"JSBridge._inject(\"native\", [\"testWithParams:callback:\"]);"
-    }
 #ifdef DEBUG
-    NSLog(@"injectString :\n%@", injectString);
+        NSLog(@"injectString :\n%@", injectString);
 #endif
-    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:injectString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
+        [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:injectString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
+    }
     
     // add message handler
     JSBridgeListener *listener = [[JSBridgeListener alloc] init];
     listener.javascriptInterfaces = interfaces;
-    [configuration.userContentController addScriptMessageHandler:listener name:WKJSMessageHandler];
+    [configuration.userContentController addScriptMessageHandler:listener name:EASY_JS_MSG_HANDLER];
     
     self = [super initWithFrame:frame configuration:configuration];
     return self;
 }
 
-- (void)wk_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler {
+- (void)main_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler {
     if (![NSThread isMainThread]) {
         dispatch_async(dispatch_get_main_queue(), ^{
             [self evaluateJavaScript:javaScriptString completionHandler:^(id _Nullable response, NSError * _Nullable error) {
@@ -178,10 +185,74 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
      paramJson = [paramJson stringByReplacingOccurrencesOfString:@"\u2029" withString:@"\\u2029"];
     
     NSString *script = [NSString stringWithFormat:@"%@('%@', '%@')", @"window.JSBridge._invokeJS", jsFuncName,  paramJson];
-    [self wk_evaluateJavaScript:script completionHandler:completionHandler];
+    [self main_evaluateJavaScript:script completionHandler:completionHandler];
 }
 
 @end
+
+
+
+#pragma mark - JSBridge
+
+@implementation JSBridge
+
++ (instancetype)shared {
+    static JSBridge * b = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        b = [[super allocWithZone:nil] init];
+    });
+    return b;
+}
+
++(id)allocWithZone:(NSZone *)zone{
+    return [self shared];
+}
+-(id)copyWithZone:(NSZone *)zone{
+    return [[self class] shared];
+}
+-(id)mutableCopyWithZone:(NSZone *)zone{
+    return [[self class] shared];
+}
+
+@synthesize cachedScripts = _cachedScripts;
+@synthesize cachedInterfaces = _cachedInterfaces;
+
+
+- (void)cacheScriptsWithInterfaces:(NSDictionary*)interfaces
+{
+    NSMutableString* injectString = [[NSMutableString alloc] init];
+    for(NSString *key in [interfaces allKeys]) {
+        [injectString appendString:@"JSBridge._inject(\""];
+        [injectString appendString:key];
+        [injectString appendString:@"\", ["];
+        NSObject* interfaceObj = [interfaces objectForKey:key];
+        if ([interfaceObj isKindOfClass:[NSObject class]]) {
+            Class cls = object_getClass(interfaceObj);
+            while (cls != [NSObject class]) {
+                unsigned int mc = 0;
+                Method * mlist = class_copyMethodList(cls, &mc);
+                for (int i = 0; i < mc; i++) {
+                    [injectString appendString:@"\""];
+                    [injectString appendString:[NSString stringWithUTF8String:sel_getName(method_getName(mlist[i]))]];
+                    [injectString appendString:@"\""];
+                    if ((i != mc - 1) || (cls.superclass != [NSObject class])) {
+                        [injectString appendString:@", "];
+                    }
+                }
+                free(mlist);
+                cls = cls.superclass;
+            }
+        }
+        [injectString appendString:@"]);"]; //@"JSBridge._inject(\"native\", [\"testWithParams:callback:\"]);"
+    }
+    
+    _cachedScripts = injectString;
+    _cachedInterfaces = interfaces;
+}
+
+@end
+
 
 
 #pragma mark - JSBridgeListener
@@ -193,7 +264,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
     NSMutableArray <JSBridgeDataFunction *>* _funcs = [NSMutableArray new];
     NSMutableArray <NSString *>* _args = [NSMutableArray new];
     
-    if ([message.name isEqualToString:WKJSMessageHandler]) {
+    if ([message.name isEqualToString:EASY_JS_MSG_HANDLER]) {
         __weak JSBridgeWebView *webView = (JSBridgeWebView *)message.webView;
         NSString *requestString = [message body];
         // native:testWithParams%3Acallback%3A:s%3Aabc%3Af%3A__cb1577786915804
@@ -270,11 +341,11 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
             NSString *retValue = tmpRetValue;
             
             if (retValue == NULL || retValue == nil) {
-                [webView wk_evaluateJavaScript:@"JSBridge.retValue=null;" completionHandler:nil];
+                [webView main_evaluateJavaScript:@"JSBridge.retValue=null;" completionHandler:nil];
             } else {
                 retValue = [retValue stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet letterCharacterSet]];
                 retValue = [@"" stringByAppendingFormat:@"JSBridge.retValue=\"%@\";", retValue];
-                [webView wk_evaluateJavaScript:retValue completionHandler:nil];
+                [webView main_evaluateJavaScript:retValue completionHandler:nil];
             }
         }
     }
@@ -338,7 +409,7 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
     [injection appendString:@");"];
     
     if (_webView){
-        [_webView wk_evaluateJavaScript:injection completionHandler:^(id response, NSError *error) {
+        [_webView main_evaluateJavaScript:injection completionHandler:^(id response, NSError *error) {
             if (completionHandler) {completionHandler(response, error);}
         }];
     }
@@ -346,4 +417,3 @@ static NSString * const WKJSMessageHandler = @"NativeListener";
 
 
 @end
-

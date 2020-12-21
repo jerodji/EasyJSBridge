@@ -21,6 +21,7 @@
             JSBridge.testWithParamscallback('abc', (p1, p2, p3) => {
                 console.log(p1, p2, p3);
                 var obj1 = JSON.parse(p1);
+                JSBridge.log('getCharacter ' + obj1.letter);
                 let div = document.getElementById("op");
                 div.innerHTML = obj1.letter;
             });
@@ -28,6 +29,7 @@
 
         
         function changeColor(param) {
+            JSBridge.log('change backgroundColor '+ param.color);
             let div = document.getElementById("oi");
             div.style.backgroundColor = param.color;
         };

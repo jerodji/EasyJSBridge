@@ -13,7 +13,6 @@
 		881045AC2302A39300C7BD76 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 881045AB2302A39300C7BD76 /* Assets.xcassets */; };
 		881045AF2302A39300C7BD76 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 881045AD2302A39300C7BD76 /* LaunchScreen.storyboard */; };
 		881045B22302A39300C7BD76 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045B12302A39300C7BD76 /* main.m */; };
-		881045F12302A65F00C7BD76 /* JSBridgeWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045F02302A65F00C7BD76 /* JSBridgeWebView.m */; };
 		881045F92302B5ED00C7BD76 /* easy-inject.js in Resources */ = {isa = PBXBuildFile; fileRef = 881045F82302B5ED00C7BD76 /* easy-inject.js */; };
 		881045FE2302BD5300C7BD76 /* NativeMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = 881045FD2302BD5300C7BD76 /* NativeMethods.m */; };
 		881046002302C10200C7BD76 /* index.html in Resources */ = {isa = PBXBuildFile; fileRef = 881045FF2302C10200C7BD76 /* index.html */; };
@@ -28,6 +27,7 @@
 		88C3154823B9DA0800E14897 /* MJPropertyKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153B23B9DA0800E14897 /* MJPropertyKey.m */; };
 		88C3154923B9DA0800E14897 /* MJFoundation.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153F23B9DA0800E14897 /* MJFoundation.m */; };
 		FA1A3F49258F583400384BC0 /* JSMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1A3F48258F583400384BC0 /* JSMethods.m */; };
+		FA41D3B02590B1DD002EC091 /* JSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = FA41D3AF2590B1DD002EC091 /* JSBridge.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,8 +60,6 @@
 		881045B12302A39300C7BD76 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		881045B72302A39400C7BD76 /* WKEasyJSWebViewTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WKEasyJSWebViewTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		881045C22302A39400C7BD76 /* WKEasyJSWebViewUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WKEasyJSWebViewUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		881045EF2302A65F00C7BD76 /* JSBridgeWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridgeWebView.h; sourceTree = "<group>"; };
-		881045F02302A65F00C7BD76 /* JSBridgeWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridgeWebView.m; sourceTree = "<group>"; };
 		881045F82302B5ED00C7BD76 /* easy-inject.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = "easy-inject.js"; sourceTree = "<group>"; };
 		881045FC2302BD5300C7BD76 /* NativeMethods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = NativeMethods.h; sourceTree = "<group>"; };
 		881045FD2302BD5300C7BD76 /* NativeMethods.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = NativeMethods.m; sourceTree = "<group>"; };
@@ -89,6 +87,8 @@
 		88C3153F23B9DA0800E14897 /* MJFoundation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJFoundation.m; sourceTree = "<group>"; };
 		FA1A3F47258F583400384BC0 /* JSMethods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSMethods.h; sourceTree = "<group>"; };
 		FA1A3F48258F583400384BC0 /* JSMethods.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSMethods.m; sourceTree = "<group>"; };
+		FA41D3AE2590B1DD002EC091 /* JSBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridge.h; sourceTree = "<group>"; };
+		FA41D3AF2590B1DD002EC091 /* JSBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridge.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,8 +148,8 @@
 		881045EE2302A49B00C7BD76 /* JSBridge */ = {
 			isa = PBXGroup;
 			children = (
-				881045EF2302A65F00C7BD76 /* JSBridgeWebView.h */,
-				881045F02302A65F00C7BD76 /* JSBridgeWebView.m */,
+				FA41D3AE2590B1DD002EC091 /* JSBridge.h */,
+				FA41D3AF2590B1DD002EC091 /* JSBridge.m */,
 				881045FC2302BD5300C7BD76 /* NativeMethods.h */,
 				881045FD2302BD5300C7BD76 /* NativeMethods.m */,
 				FA1A3F47258F583400384BC0 /* JSMethods.h */,
@@ -355,8 +355,8 @@
 				88C3154723B9DA0800E14897 /* NSString+MJExtension.m in Sources */,
 				88C3154123B9DA0800E14897 /* NSObject+MJKeyValue.m in Sources */,
 				88C3154323B9DA0800E14897 /* NSObject+MJCoding.m in Sources */,
+				FA41D3B02590B1DD002EC091 /* JSBridge.m in Sources */,
 				881045A42302A39000C7BD76 /* AppDelegate.m in Sources */,
-				881045F12302A65F00C7BD76 /* JSBridgeWebView.m in Sources */,
 				88C3154823B9DA0800E14897 /* MJPropertyKey.m in Sources */,
 				88C3154923B9DA0800E14897 /* MJFoundation.m in Sources */,
 			);
