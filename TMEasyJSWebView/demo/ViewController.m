@@ -25,10 +25,14 @@
     
     CGRect rect = CGRectMake(20, 88, self.view.bounds.size.width-40, self.view.bounds.size.height-300);
 //    self.webView = [[JSBridgeWebView alloc] initWithFrame:rect configuration:[WKWebViewConfiguration new] scripts:nil javascriptInterfaces:@{@"native":[NativeMethods new]}];
-    self.webView = [[JSBridgeWebView alloc] initWithFrame:rect
-                                            configuration:[[WKWebViewConfiguration alloc] init]
-                                                  scripts:@[[JSBridge shared].cachedScripts]
-                                     javascriptInterfaces:[JSBridge shared].cachedInterfaces];
+    
+//    self.webView = [[JSBridgeWebView alloc] initWithFrame:rect
+//                                            configuration:[[WKWebViewConfiguration alloc] init]
+//                                                  scripts:@[[JSBridge shared].cachedScripts]
+//                                     javascriptInterfaces:[JSBridge shared].cachedInterfaces];
+    
+    self.webView = [[JSBridgeWebView alloc] initUsingCacheWithFrame:rect];
+    
     self.webView.navigationDelegate = self;
    [self.view addSubview:self.webView];
     

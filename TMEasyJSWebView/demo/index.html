@@ -32,6 +32,7 @@
             JSBridge.log('change backgroundColor '+ param.color);
             let div = document.getElementById("oi");
             div.style.backgroundColor = param.color;
+            div.innerHTML = param.color;
         };
         // 将 changeColor 方法 注册给原生
         JSBridge.registor("divChangeColor", changeColor);

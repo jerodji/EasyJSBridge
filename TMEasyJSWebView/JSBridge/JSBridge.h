@@ -15,6 +15,8 @@
 
 @interface JSBridgeWebView : WKWebView
 
+- (instancetype)initUsingCacheWithFrame:(CGRect)frame;
+
 - (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration scripts:(NSArray<NSString*>*)scripts javascriptInterfaces:(NSDictionary*)interfaces;
 
 /// 主线程执行js
@@ -31,10 +33,13 @@
 
 @interface JSBridge : NSObject
 
+@property (nonatomic, copy, readonly) NSString *injectedJS;
 @property (nonatomic, copy, readonly) NSString *cachedScripts;///< cache scripts
 @property (nonatomic, copy, readonly) NSDictionary *cachedInterfaces;///< cache interfaces
 
 + (instancetype)shared;
+
+/// 建议缓存, 可提高 js 加载速度
 - (void)cacheScriptsWithInterfaces:(NSDictionary*)interfaces;
 
 @end
