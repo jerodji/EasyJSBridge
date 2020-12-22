@@ -15,9 +15,17 @@
 
 @interface JSBridgeWebView : WKWebView
 
-- (instancetype)initUsingCacheWithFrame:(CGRect)frame;
+- (instancetype)initUsingCacheWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration;
 
-- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration scripts:(NSArray<NSString*>*)scripts javascriptInterfaces:(NSDictionary*)interfaces;
+//- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration  javascriptInterfaces:(NSDictionary*)interfaces;
+
+
+/// 初始化
+/// @param frame 位置
+/// @param configuration 配置
+/// @param scripts js字符串
+/// @param interfaces 没有缓存过的 JS 交互类
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration scripts:(NSArray<NSString*>*)scripts javascriptInterfaces:(NSArray*)interfaces;
 
 /// 主线程执行js
 - (void)main_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler;
@@ -33,14 +41,19 @@
 
 @interface JSBridge : NSObject
 
-@property (nonatomic, copy, readonly) NSString *injectedJS;
-@property (nonatomic, copy, readonly) NSString *cachedScripts;///< cache scripts
-@property (nonatomic, copy, readonly) NSDictionary *cachedInterfaces;///< cache interfaces
+@property (nonatomic, copy, readonly) NSString  *bridgeJS;
+
+@property (nonatomic, copy, readonly) NSString  *cachedScripts;///< cache scripts
+@property (nonatomic, copy, readonly) NSArray   *cachedInterfaces;///< cache interfaces
+
+@property (nonatomic, copy, readonly) NSMutableDictionary *interfaces;
 
 + (instancetype)shared;
 
 /// 建议缓存, 可提高 js 加载速度
-- (void)cacheScriptsWithInterfaces:(NSDictionary*)interfaces;
+- (void)cacheScriptsWithInterfaces:(NSArray<NSObject*>*)interfaces;
+
+- (NSString*)injectScriptWithInterfaces:(NSArray<NSObject*>*)interfaces;
 
 @end
 

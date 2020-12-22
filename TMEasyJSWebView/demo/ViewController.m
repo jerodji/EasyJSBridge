@@ -31,7 +31,7 @@
 //                                                  scripts:@[[JSBridge shared].cachedScripts]
 //                                     javascriptInterfaces:[JSBridge shared].cachedInterfaces];
     
-    self.webView = [[JSBridgeWebView alloc] initUsingCacheWithFrame:rect];
+    self.webView = [[JSBridgeWebView alloc] initUsingCacheWithFrame:rect configuration:nil];
     
     self.webView.navigationDelegate = self;
    [self.view addSubview:self.webView];
