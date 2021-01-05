@@ -119,6 +119,7 @@
 		881045962302A39000C7BD76 = {
 			isa = PBXGroup;
 			children = (
+				881045EE2302A49B00C7BD76 /* JSBridge */,
 				881045A12302A39000C7BD76 /* TMEasyJSWebView */,
 				881045A02302A39000C7BD76 /* Products */,
 			);
@@ -138,7 +139,6 @@
 			isa = PBXGroup;
 			children = (
 				881045FA2302BC9700C7BD76 /* demo */,
-				881045EE2302A49B00C7BD76 /* JSBridge */,
 				88C3152A23B9DA0800E14897 /* MJExtension */,
 				881045FB2302BCBB00C7BD76 /* Support Fiels */,
 			);
