@@ -7,53 +7,25 @@
 //
 
 #import <Foundation/Foundation.h>
-//#import "JSBridgeWebView.h"
-#import <WebKit/WebKit.h>
+#import "JSBridgeWebView.h"
 
-
-#pragma mark - JSBridgeWebView
-
-@interface JSBridgeWebView : WKWebView
-
-- (instancetype)initUsingCacheWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration;
-
-//- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration  javascriptInterfaces:(NSDictionary*)interfaces;
-
-
-/// 初始化
-/// @param frame 位置
-/// @param configuration 配置
-/// @param scripts js字符串
-/// @param interfaces 没有缓存过的 JS 交互类
-- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration scripts:(NSArray<NSString*>*)scripts javascriptInterfaces:(NSArray*)interfaces;
-
-/// 主线程执行js
-- (void)main_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler;
-
-/// native 调用 h5 方法
-- (void)invokeJSFunction:(NSString*)jsFuncName params:(id)params completionHandler:(void (^)(id response, NSError *error))completionHandler;
-
-@end
-
+static NSString * const EASY_JS_MSG_HANDLER = @"NativeListener";
 
 
 #pragma mark - JSBridge
 
 @interface JSBridge : NSObject
 
-@property (nonatomic, copy, readonly) NSString  *bridgeJS;
+/// 本地 js 桥接脚本
++ (NSString*)BRIDGE_SCRIPT;
 
-@property (nonatomic, copy, readonly) NSString  *cachedScripts;///< cache scripts
-@property (nonatomic, copy, readonly) NSArray   *cachedInterfaces;///< cache interfaces
+/// 缓存交互类与方法
++ (NSMutableDictionary<NSString*, NSArray*>*)cacheDictionary;
 
-@property (nonatomic, copy, readonly) NSMutableDictionary *interfaces;
-
-+ (instancetype)shared;
++ (NSString*)cacheMethodsInjectString;
 
 /// 建议缓存, 可提高 js 加载速度
-- (void)cacheScriptsWithInterfaces:(NSArray<NSObject*>*)interfaces;
-
-- (NSString*)injectScriptWithInterfaces:(NSArray<NSObject*>*)interfaces;
++ (void)cacheWithInterfaces:(NSArray<Class>*)interfaces;
 
 @end
 
@@ -62,7 +34,7 @@
 #pragma mark - JSBridgeListener
 
 @interface JSBridgeListener : NSObject<WKNavigationDelegate,WKScriptMessageHandler>
-@property (nonatomic) NSDictionary *javascriptInterfaces;
+@property (nonatomic) NSDictionary<NSString*, NSObject*> *javascriptInterfaces;
 @end
 
 

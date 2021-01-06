@@ -20,7 +20,8 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
     // 提前缓存, 提高 js 的加载速度
-    [[JSBridge shared] cacheScriptsWithInterfaces:@[[NativeMethods new]]];
+//    [[JSBridge shared] cacheScriptsWithInterfaces:@[[NativeMethods class]]];
+    [JSBridge cacheWithInterfaces:@[[NativeMethods class]]];
     
     if (@available(iOS 13.0, *)) {
         self.window.overrideUserInterfaceStyle = UIUserInterfaceStyleLight; // iOS13 指定light模式

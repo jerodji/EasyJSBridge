@@ -28,6 +28,7 @@
 		FA1A3F49258F583400384BC0 /* JSMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1A3F48258F583400384BC0 /* JSMethods.m */; };
 		FA41D3B02590B1DD002EC091 /* JSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = FA41D3AF2590B1DD002EC091 /* JSBridge.m */; };
 		FA5CC32425919E35007638E1 /* JSBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = FA5CC32325919E35007638E1 /* JSBridge.js */; };
+		FAFFFEBC25A5C49700D295C5 /* JSBridgeWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,8 @@
 		FA41D3AE2590B1DD002EC091 /* JSBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridge.h; sourceTree = "<group>"; };
 		FA41D3AF2590B1DD002EC091 /* JSBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridge.m; sourceTree = "<group>"; };
 		FA5CC32325919E35007638E1 /* JSBridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = JSBridge.js; sourceTree = "<group>"; };
+		FAFFFEBA25A5C49700D295C5 /* JSBridgeWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridgeWebView.h; sourceTree = "<group>"; };
+		FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridgeWebView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -148,9 +151,11 @@
 		881045EE2302A49B00C7BD76 /* JSBridge */ = {
 			isa = PBXGroup;
 			children = (
-				FA5CC32325919E35007638E1 /* JSBridge.js */,
+				FAFFFEBA25A5C49700D295C5 /* JSBridgeWebView.h */,
+				FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */,
 				FA41D3AE2590B1DD002EC091 /* JSBridge.h */,
 				FA41D3AF2590B1DD002EC091 /* JSBridge.m */,
+				FA5CC32325919E35007638E1 /* JSBridge.js */,
 			);
 			path = JSBridge;
 			sourceTree = "<group>";
@@ -346,6 +351,7 @@
 				881045FE2302BD5300C7BD76 /* NativeMethods.m in Sources */,
 				88C3154023B9DA0800E14897 /* MJPropertyType.m in Sources */,
 				881045A72302A39000C7BD76 /* ViewController.m in Sources */,
+				FAFFFEBC25A5C49700D295C5 /* JSBridgeWebView.m in Sources */,
 				88C3154223B9DA0800E14897 /* MJProperty.m in Sources */,
 				88C3154523B9DA0800E14897 /* NSObject+MJProperty.m in Sources */,
 				88C3154623B9DA0800E14897 /* NSObject+MJClass.m in Sources */,
