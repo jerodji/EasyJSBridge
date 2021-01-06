@@ -8,32 +8,11 @@
 
 #import "JSBridge.h"
 #import <objc/runtime.h>
-#import "MJExtension.h"
+#import "NSObject+MJKeyValue.h"
 
 #pragma mark - JSBridge
 
 @interface JSBridge()
-
-/**
- 存放本地 js 脚本
- */
-@property (nonatomic, copy) NSString  *bridgeJS;
-
-/**
- 缓存交互类与方法, 以下面的结构组装数据
- 
- {
-    "className0" : [class, "JSBridge._inject(\"NativeMethods\", [\"testWithParams:callback:\", \"log:\"]);"],
-    "className1" : [class, "JSBridge._inject(\"NativeMethods\", [\"testWithParams:callback:\", \"log:\"]);"],
-    "className2" : [class, "JSBridge._inject(\"NativeMethods\", [\"testWithParams:callback:\", \"log:\"]);"]
- }
- */
-@property (nonatomic, strong) NSMutableDictionary<NSString*, NSArray*> *cacheMap;
-
-/**
- 交互方法 js string
- */
-@property (nonatomic, copy) NSMutableString *methodsInjectString;
 
 @end
 
@@ -71,59 +50,42 @@
     }
 }
 
-+ (NSString *)BRIDGE_SCRIPT {
-    return [JSBridge shared].bridgeJS;
-}
-
-+ (NSMutableDictionary<NSString*, NSArray*>*)cacheDictionary {
-    return [JSBridge shared].cacheMap;
-}
-
-+ (NSString*)cacheMethodsInjectString {
-    return [JSBridge shared].methodsInjectString;
-}
-
-+ (void)cacheWithInterfaces:(NSArray<Class>*)interfaces
+- (void)cacheWithInterfaces:(NSArray<Class>*)interfaces
 {
     if (interfaces && [interfaces isKindOfClass:[NSArray class]] && interfaces.count > 0)
     {
-        for(Class cls in interfaces)
+        for(Class objCls in interfaces)
         {
             NSMutableString* injectString = [[NSMutableString alloc] init];
-            NSString *  objName = NSStringFromClass(cls);
-            NSObject *  obj     = [[cls alloc] init];
-            Class       objCls  = [obj class];
+            NSString *  objName = NSStringFromClass(objCls);
+            NSObject *  obj     = [[objCls alloc] init];
+            Class       cls     = objCls;
             
             // _inject: function (obj, methods) {}
             [injectString appendString:@"JSBridge._inject(\""];
             [injectString appendString:objName];
             [injectString appendString:@"\", ["];
             if ([obj isKindOfClass:[NSObject class]]) {
-                while (objCls != [NSObject class]) {
+                while (cls != [NSObject class]) {
                     unsigned int mc = 0;
-                    Method * mlist = class_copyMethodList(objCls, &mc);
+                    Method * mlist = class_copyMethodList(cls, &mc);
                     for (int i = 0; i < mc; i++) {
                         [injectString appendString:@"\""];
                         [injectString appendString:[NSString stringWithUTF8String:sel_getName(method_getName(mlist[i]))]];
                         [injectString appendString:@"\""];
-                        if ((i != mc - 1) || (objCls.superclass != [NSObject class])) {
+                        if ((i != mc - 1) || (cls.superclass != [NSObject class])) {
                             [injectString appendString:@", "];
                         }
                     }
                     free(mlist);
-                    objCls = objCls.superclass;
+                    cls = cls.superclass;
                 }
             }
             [injectString appendString:@"]);"];
             
             [[JSBridge shared].cacheMap setObject:@[objCls, injectString] forKey:objName];
             [[JSBridge shared].methodsInjectString appendString:injectString];
-        }
-        
-    }
-    else
-    {
-        NSAssert(NO, @"*** interfaces无效");
+        }   
     }
 }
 
@@ -163,7 +125,8 @@
         
         NSString* obj = (NSString*)[components objectAtIndex:0];
         NSString* method = [(NSString*)[components objectAtIndex:1] stringByRemovingPercentEncoding];
-        NSObject* interface = [self.javascriptInterfaces objectForKey:obj];
+        Class objClass = [[self.interfaces objectForKey:obj] objectAtIndex:0];
+        NSObject* interface = [[objClass alloc] init];
         
         // execute the interfacing method
         SEL selector = NSSelectorFromString(method);

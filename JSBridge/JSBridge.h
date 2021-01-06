@@ -16,16 +16,32 @@ static NSString * const EASY_JS_MSG_HANDLER = @"NativeListener";
 
 @interface JSBridge : NSObject
 
-/// 本地 js 桥接脚本
-+ (NSString*)BRIDGE_SCRIPT;
++ (instancetype)shared;
 
-/// 缓存交互类与方法
-+ (NSMutableDictionary<NSString*, NSArray*>*)cacheDictionary;
+/**
+ 存放本地 js 脚本
+ */
+@property (nonatomic, copy) NSString  *bridgeJS;
 
-+ (NSString*)cacheMethodsInjectString;
+/**
+ 缓存交互类与方法, 以下面的结构组装数据
+ 
+ {
+    "className0" : [class, "JSBridge._inject(\"NativeMethods\", [\"testWithParams:callback:\", \"log:\"]);"],
+    "className1" : [class, "JSBridge._inject(\"NativeMethods\", [\"testWithParams:callback:\", \"log:\"]);"]
+ }
+ */
+@property (nonatomic, strong) NSMutableDictionary<NSString*, NSArray*> *cacheMap;
 
-/// 建议缓存, 可提高 js 加载速度
-+ (void)cacheWithInterfaces:(NSArray<Class>*)interfaces;
+/**
+ 交互方法 js string
+ */
+@property (nonatomic, copy) NSMutableString *methodsInjectString;
+
+/**
+ 建议缓存, 可提高 js 加载速度
+ */
+- (void)cacheWithInterfaces:(NSArray<Class>*)interfaces;
 
 @end
 
@@ -34,7 +50,7 @@ static NSString * const EASY_JS_MSG_HANDLER = @"NativeListener";
 #pragma mark - JSBridgeListener
 
 @interface JSBridgeListener : NSObject<WKNavigationDelegate,WKScriptMessageHandler>
-@property (nonatomic) NSDictionary<NSString*, NSObject*> *javascriptInterfaces;
+@property (nonatomic) NSDictionary<NSString*, NSArray*> *interfaces;
 @end
 
 

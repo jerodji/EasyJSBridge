@@ -8,6 +8,7 @@
 
 #import "JSBridgeWebView.h"
 #import "JSBridge.h"
+#import "NSObject+MJKeyValue.h"
 
 @implementation JSBridgeWebView
 
@@ -17,97 +18,38 @@
 - (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration interfaces:(NSArray<Class>*)interfaces
 {
     // 踢除已缓存的交互类
-    NSMutableArray<Class> *interfacesArray = [NSMutableArray arrayWithArray:interfaces];
-    [[JSBridge cacheDictionary] enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSArray * _Nonnull obj, BOOL * _Nonnull stop) {
+    NSMutableArray<Class> *interfaceClassArray = [NSMutableArray arrayWithArray:interfaces];
+    [[JSBridge shared].cacheMap enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSArray * _Nonnull obj, BOOL * _Nonnull stop) {
         NSLog(@"%@ %@",key,obj);
         if (obj.count == 2) {
             Class objClass = [obj objectAtIndex:0];
-            if (objClass && [interfacesArray containsObject:objClass]) {
-                [interfacesArray removeObject:objClass];
+            if (objClass && [interfaceClassArray containsObject:objClass]) {
+                [interfaceClassArray removeObject:objClass];
             }
         }
     }];
     
     // 将新的交互类添加到缓存
-    if (interfacesArray.count > 0) {
-        [JSBridge cacheWithInterfaces:interfacesArray];        
+    if (interfaceClassArray.count > 0) {
+        [[JSBridge shared] cacheWithInterfaces:interfaceClassArray];        
     }
     
     // 注入桥接js
     if (!configuration) configuration = [[WKWebViewConfiguration alloc] init];
     if (!configuration.userContentController) configuration.userContentController = [[WKUserContentController alloc] init];
-    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:[JSBridge BRIDGE_SCRIPT] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
+    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:[JSBridge shared].bridgeJS injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
     
     // 注入交互方法
-    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:[JSBridge cacheMethodsInjectString] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
+    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:[JSBridge shared].methodsInjectString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
     
-    
-//    if (scripts) {
-//        for (NSString* script in scripts) {
-//            if (script) {
-//                [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:script injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
-//            }
-//        }
-//    }
-    
-//    if (interfaces) {
-//        // 使用缓存可避免这段循环代码,加快执行速度
-//        if (![JSBridge shared].cachedInterfaces) {
-//            NSString * injectString = [[JSBridge shared] injectScriptWithInterfaces:interfaces];
-//            [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:injectString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
-//        }
-//
-//
-//        // add message handler
-//        JSBridgeListener *listener = [[JSBridgeListener alloc] init];
-//        listener.javascriptInterfaces = [JSBridge shared].interfaces;
-//        [configuration.userContentController addScriptMessageHandler:listener name:EASY_JS_MSG_HANDLER];
-//    }
-    
-    // 监听js发送的信息
+    // 添加js发送信息监听者
     JSBridgeListener *listener = [[JSBridgeListener alloc] init];
-    listener.javascriptInterfaces = [JSBridge shared].interfaces;
+    listener.interfaces = [JSBridge shared].cacheMap;
     [configuration.userContentController addScriptMessageHandler:listener name:EASY_JS_MSG_HANDLER];
     
     self = [super initWithFrame:frame configuration:configuration];
     return self;
 }
-
-//- (WKWebViewConfiguration*)_handleConfiguration:(WKWebViewConfiguration*)configuration scripts:(NSArray<NSString*>*)scripts javascriptInterfaces:(NSArray<Class>*)interfaces {
-//    if (!configuration) {
-//        configuration = [[WKWebViewConfiguration alloc] init];
-//    }
-//    if (!configuration.userContentController) {
-//        configuration.userContentController = [[WKUserContentController alloc] init];
-//    }
-//
-//    // add script
-//    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:[JSBridge BRIDGE_SCRIPT] injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
-//
-//    if (scripts) {
-//        for (NSString* script in scripts) {
-//            if (script) {
-//                [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:script injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
-//            }
-//        }
-//    }
-//
-//    if (interfaces) {
-//        // 使用缓存可避免这段循环代码,加快执行速度
-//        if (![JSBridge shared].cachedInterfaces) {
-//            NSString * injectString = [[JSBridge shared] injectScriptWithInterfaces:interfaces];
-//            [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:injectString injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
-//        }
-//
-//
-//        // add message handler
-//        JSBridgeListener *listener = [[JSBridgeListener alloc] init];
-//        listener.javascriptInterfaces = [JSBridge shared].interfaces;
-//        [configuration.userContentController addScriptMessageHandler:listener name:EASY_JS_MSG_HANDLER];
-//    }
-//
-//    return configuration;
-//}
 
 - (void)main_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler {
     if (![NSThread isMainThread]) {

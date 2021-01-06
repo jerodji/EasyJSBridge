@@ -5,18 +5,20 @@
     window.JSBridge = {
         __callbacks: {},
         __events: {},
+        __nativeObject: {},
         _inject: function (obj, methods) {
-            let jsObj = {};
-            JSBridge[obj] = jsObj;
             for (let i = 0 , l = methods.length; i < l; i++) {
                 let method = methods[i];
                 let jsMethod = method.replace(new RegExp(':', 'g'), '');
-                jsObj[jsMethod] = function () {
-                    return JSBridge._call(obj, method, Array.prototype.slice.call(arguments));
+                JSBridge[jsMethod] = function () {
+                    return JSBridge._postMessage(obj, method, Array.prototype.slice.call(arguments));
                 };
             }
         },
-        _call: function (obj, functionName, args) {
+        _injectNativeObject: function (objs) {
+            JSBridge.__nativeObject = objs;
+        },
+        _postMessage: function (obj, functionName, args) {
             let formattedArgs = [];
             for (let i = 0, l = args.length; i < l; i++) {
                 if (typeof args[i] == 'function') {
@@ -37,6 +39,12 @@
 
             if (ret) {
                 return decodeURIComponent(ret);
+            }
+        },
+        call: function (methodName, callback) {
+            let obj = JSBridge.__nativeObject;
+            if (obj && typeof (obj) === 'object') {
+                JSBridge._postMessage(obj, methodName, callback);
             }
         },
         _invokeCallback: function (cbID, removeAfterExecute) {

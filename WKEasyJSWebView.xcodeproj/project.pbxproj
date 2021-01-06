@@ -28,6 +28,7 @@
 		FA1A3F49258F583400384BC0 /* JSMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1A3F48258F583400384BC0 /* JSMethods.m */; };
 		FA41D3B02590B1DD002EC091 /* JSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = FA41D3AF2590B1DD002EC091 /* JSBridge.m */; };
 		FA5CC32425919E35007638E1 /* JSBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = FA5CC32325919E35007638E1 /* JSBridge.js */; };
+		FA7F9C3025A6075700B98F4D /* IOSInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7F9C2F25A6075700B98F4D /* IOSInterface.m */; };
 		FAFFFEBC25A5C49700D295C5 /* JSBridgeWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */; };
 /* End PBXBuildFile section */
 
@@ -90,6 +91,8 @@
 		FA41D3AE2590B1DD002EC091 /* JSBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridge.h; sourceTree = "<group>"; };
 		FA41D3AF2590B1DD002EC091 /* JSBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridge.m; sourceTree = "<group>"; };
 		FA5CC32325919E35007638E1 /* JSBridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = JSBridge.js; sourceTree = "<group>"; };
+		FA7F9C2E25A6075700B98F4D /* IOSInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOSInterface.h; sourceTree = "<group>"; };
+		FA7F9C2F25A6075700B98F4D /* IOSInterface.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IOSInterface.m; sourceTree = "<group>"; };
 		FAFFFEBA25A5C49700D295C5 /* JSBridgeWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridgeWebView.h; sourceTree = "<group>"; };
 		FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridgeWebView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -170,6 +173,8 @@
 				881045FF2302C10200C7BD76 /* index.html */,
 				881045FC2302BD5300C7BD76 /* NativeMethods.h */,
 				881045FD2302BD5300C7BD76 /* NativeMethods.m */,
+				FA7F9C2E25A6075700B98F4D /* IOSInterface.h */,
+				FA7F9C2F25A6075700B98F4D /* IOSInterface.m */,
 				FA1A3F47258F583400384BC0 /* JSMethods.h */,
 				FA1A3F48258F583400384BC0 /* JSMethods.m */,
 			);
@@ -191,13 +196,14 @@
 		88C3152A23B9DA0800E14897 /* MJExtension */ = {
 			isa = PBXGroup;
 			children = (
+				88C3153D23B9DA0800E14897 /* NSObject+MJKeyValue.h */,
+				88C3153123B9DA0800E14897 /* NSObject+MJKeyValue.m */,
 				88C3152B23B9DA0800E14897 /* MJPropertyKey.h */,
 				88C3152C23B9DA0800E14897 /* NSObject+MJClass.h */,
 				88C3152D23B9DA0800E14897 /* NSString+MJExtension.h */,
 				88C3152E23B9DA0800E14897 /* MJPropertyType.m */,
 				88C3152F23B9DA0800E14897 /* NSObject+MJProperty.h */,
 				88C3153023B9DA0800E14897 /* MJExtensionConst.h */,
-				88C3153123B9DA0800E14897 /* NSObject+MJKeyValue.m */,
 				88C3153223B9DA0800E14897 /* MJProperty.m */,
 				88C3153323B9DA0800E14897 /* MJFoundation.h */,
 				88C3153423B9DA0800E14897 /* NSObject+MJCoding.m */,
@@ -209,7 +215,6 @@
 				88C3153A23B9DA0800E14897 /* NSString+MJExtension.m */,
 				88C3153B23B9DA0800E14897 /* MJPropertyKey.m */,
 				88C3153C23B9DA0800E14897 /* MJProperty.h */,
-				88C3153D23B9DA0800E14897 /* NSObject+MJKeyValue.h */,
 				88C3153E23B9DA0800E14897 /* NSObject+MJCoding.h */,
 				88C3153F23B9DA0800E14897 /* MJFoundation.m */,
 			);
@@ -365,6 +370,7 @@
 				881045A42302A39000C7BD76 /* AppDelegate.m in Sources */,
 				88C3154823B9DA0800E14897 /* MJPropertyKey.m in Sources */,
 				88C3154923B9DA0800E14897 /* MJFoundation.m in Sources */,
+				FA7F9C3025A6075700B98F4D /* IOSInterface.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
