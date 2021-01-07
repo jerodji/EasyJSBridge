@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "MJExtension.h"
 
-#import "JSBridge.h"
+#import "OCJSBridge.h"
 #import "NativeMethods.h"
 #import "JSMethods.h"
 

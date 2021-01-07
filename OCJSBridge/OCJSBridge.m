@@ -6,20 +6,20 @@
 //  Copyright © 2020 JIJIUDONG. All rights reserved.
 //
 
-#import "JSBridge.h"
+#import "OCJSBridge.h"
 #import <objc/runtime.h>
 #import "NSObject+MJKeyValue.h"
 
 #pragma mark - JSBridge
 
-@interface JSBridge()
+@interface OCJSBridge()
 
 @end
 
-@implementation JSBridge
+@implementation OCJSBridge
 
 + (instancetype)shared {
-    static JSBridge * b = nil;
+    static OCJSBridge * b = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         b = [[super allocWithZone:nil] init];

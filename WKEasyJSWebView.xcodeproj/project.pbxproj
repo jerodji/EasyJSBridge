@@ -26,8 +26,8 @@
 		88C3154823B9DA0800E14897 /* MJPropertyKey.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153B23B9DA0800E14897 /* MJPropertyKey.m */; };
 		88C3154923B9DA0800E14897 /* MJFoundation.m in Sources */ = {isa = PBXBuildFile; fileRef = 88C3153F23B9DA0800E14897 /* MJFoundation.m */; };
 		FA1A3F49258F583400384BC0 /* JSMethods.m in Sources */ = {isa = PBXBuildFile; fileRef = FA1A3F48258F583400384BC0 /* JSMethods.m */; };
-		FA41D3B02590B1DD002EC091 /* JSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = FA41D3AF2590B1DD002EC091 /* JSBridge.m */; };
-		FA5CC32425919E35007638E1 /* JSBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = FA5CC32325919E35007638E1 /* JSBridge.js */; };
+		FA41D3B02590B1DD002EC091 /* OCJSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = FA41D3AF2590B1DD002EC091 /* OCJSBridge.m */; };
+		FA5CC32425919E35007638E1 /* OCJSBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = FA5CC32325919E35007638E1 /* OCJSBridge.js */; };
 		FA7F9C3025A6075700B98F4D /* IOSInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7F9C2F25A6075700B98F4D /* IOSInterface.m */; };
 		FAFFFEBC25A5C49700D295C5 /* JSBridgeWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */; };
 /* End PBXBuildFile section */
@@ -88,9 +88,9 @@
 		88C3153F23B9DA0800E14897 /* MJFoundation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MJFoundation.m; sourceTree = "<group>"; };
 		FA1A3F47258F583400384BC0 /* JSMethods.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSMethods.h; sourceTree = "<group>"; };
 		FA1A3F48258F583400384BC0 /* JSMethods.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSMethods.m; sourceTree = "<group>"; };
-		FA41D3AE2590B1DD002EC091 /* JSBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridge.h; sourceTree = "<group>"; };
-		FA41D3AF2590B1DD002EC091 /* JSBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridge.m; sourceTree = "<group>"; };
-		FA5CC32325919E35007638E1 /* JSBridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = JSBridge.js; sourceTree = "<group>"; };
+		FA41D3AE2590B1DD002EC091 /* OCJSBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCJSBridge.h; sourceTree = "<group>"; };
+		FA41D3AF2590B1DD002EC091 /* OCJSBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCJSBridge.m; sourceTree = "<group>"; };
+		FA5CC32325919E35007638E1 /* OCJSBridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = OCJSBridge.js; sourceTree = "<group>"; };
 		FA7F9C2E25A6075700B98F4D /* IOSInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOSInterface.h; sourceTree = "<group>"; };
 		FA7F9C2F25A6075700B98F4D /* IOSInterface.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IOSInterface.m; sourceTree = "<group>"; };
 		FAFFFEBA25A5C49700D295C5 /* JSBridgeWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridgeWebView.h; sourceTree = "<group>"; };
@@ -125,7 +125,7 @@
 		881045962302A39000C7BD76 = {
 			isa = PBXGroup;
 			children = (
-				881045EE2302A49B00C7BD76 /* JSBridge */,
+				881045EE2302A49B00C7BD76 /* OCJSBridge */,
 				881045A12302A39000C7BD76 /* TMEasyJSWebView */,
 				881045A02302A39000C7BD76 /* Products */,
 			);
@@ -151,16 +151,16 @@
 			path = TMEasyJSWebView;
 			sourceTree = "<group>";
 		};
-		881045EE2302A49B00C7BD76 /* JSBridge */ = {
+		881045EE2302A49B00C7BD76 /* OCJSBridge */ = {
 			isa = PBXGroup;
 			children = (
 				FAFFFEBA25A5C49700D295C5 /* JSBridgeWebView.h */,
 				FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */,
-				FA41D3AE2590B1DD002EC091 /* JSBridge.h */,
-				FA41D3AF2590B1DD002EC091 /* JSBridge.m */,
-				FA5CC32325919E35007638E1 /* JSBridge.js */,
+				FA41D3AE2590B1DD002EC091 /* OCJSBridge.h */,
+				FA41D3AF2590B1DD002EC091 /* OCJSBridge.m */,
+				FA5CC32325919E35007638E1 /* OCJSBridge.js */,
 			);
-			path = JSBridge;
+			path = OCJSBridge;
 			sourceTree = "<group>";
 		};
 		881045FA2302BC9700C7BD76 /* demo */ = {
@@ -324,7 +324,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA5CC32425919E35007638E1 /* JSBridge.js in Resources */,
+				FA5CC32425919E35007638E1 /* OCJSBridge.js in Resources */,
 				881045AF2302A39300C7BD76 /* LaunchScreen.storyboard in Resources */,
 				881046002302C10200C7BD76 /* index.html in Resources */,
 				881045AC2302A39300C7BD76 /* Assets.xcassets in Resources */,
@@ -366,7 +366,7 @@
 				88C3154723B9DA0800E14897 /* NSString+MJExtension.m in Sources */,
 				88C3154123B9DA0800E14897 /* NSObject+MJKeyValue.m in Sources */,
 				88C3154323B9DA0800E14897 /* NSObject+MJCoding.m in Sources */,
-				FA41D3B02590B1DD002EC091 /* JSBridge.m in Sources */,
+				FA41D3B02590B1DD002EC091 /* OCJSBridge.m in Sources */,
 				881045A42302A39000C7BD76 /* AppDelegate.m in Sources */,
 				88C3154823B9DA0800E14897 /* MJPropertyKey.m in Sources */,
 				88C3154923B9DA0800E14897 /* MJFoundation.m in Sources */,

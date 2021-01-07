@@ -14,7 +14,7 @@ static NSString * const EASY_JS_MSG_HANDLER = @"NativeListener";
 
 #pragma mark - JSBridge
 
-@interface JSBridge : NSObject
+@interface OCJSBridge : NSObject
 
 + (instancetype)shared;
 

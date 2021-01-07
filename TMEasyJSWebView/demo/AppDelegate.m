@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "JSBridge.h"
+#import "OCJSBridge.h"
 #import "NativeMethods.h"
 
 @interface AppDelegate ()
@@ -21,7 +21,7 @@
     
     // 提前缓存, 提高 js 的加载速度
 //    [[JSBridge shared] cacheScriptsWithInterfaces:@[[NativeMethods class]]];
-    [[JSBridge shared] cacheWithInterfaces:@[[NativeMethods class]]];
+//    [[OCJSBridge shared] cacheWithInterfaces:@[[NativeMethods class]]];
     
     if (@available(iOS 13.0, *)) {
         self.window.overrideUserInterfaceStyle = UIUserInterfaceStyleLight; // iOS13 指定light模式
