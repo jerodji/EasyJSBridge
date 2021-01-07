@@ -7,9 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "OCJSBridge.h"
 
 @interface IOSInterface : NSObject
 
-- (void)log:(NSString *)params;
+- (void)log:(NSString *)json;
+
+- (void)testWithParams;
 
 @end

@@ -10,8 +10,12 @@
 
 @implementation IOSInterface
 
-- (void)log:(NSString *)params {
-    NSLog(@"IOSInterface [JS] : %@", params);
+- (void)log:(NSString *)json {
+    NSLog(@"[JS LOG] : %@", json);
+}
+
+- (void)testWithParams {
+    NSLog(@"testWithParams");
 }
 
 @end

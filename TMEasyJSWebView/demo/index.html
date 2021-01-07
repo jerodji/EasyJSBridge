@@ -18,10 +18,12 @@
     </style>
     <script>
         function getCharacter() {
-            JSBridge.NativeMethods.testWithParamscallback('abc', (p1, p2, p3) => {
+            const apiTest = 'testService/testWithParams';
+            const apiLog = 'ioService/log';
+            JSBridge.call(apiTest, {'key1':'abc','key2':'mkl'}, (p1, p2, p3) => {
                 console.log(p1, p2, p3);
                 var obj1 = JSON.parse(p1);
-                JSBridge.NativeMethods.log('getCharacter ' + obj1.letter);
+                JSBridge.call(apiLog, obj1.letter);
                 let div = document.getElementById("op");
                 div.innerHTML = obj1.letter;
             });
@@ -29,7 +31,8 @@
 
         
         function changeColor(param) {
-            JSBridge.NativeMethods.log('change backgroundColor '+ param.color);
+            const apiLog = 'ioService/log';
+            JSBridge.call(apiLog, 'change backgroundColor '+ param.color);
             let div = document.getElementById("oi");
             div.style.backgroundColor = param.color;
             div.innerHTML = param.color;

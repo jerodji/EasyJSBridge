@@ -11,6 +11,7 @@
 
 #import "OCJSBridge.h"
 #import "NativeMethods.h"
+#import "IOSInterface.h"
 #import "JSMethods.h"
 
 @interface ViewController ()<WKNavigationDelegate>
@@ -28,7 +29,10 @@
     
     self.webView = [[JSBridgeWebView alloc] initWithFrame:rect
                                             configuration:[[WKWebViewConfiguration alloc] init]
-                                               interfaces:@[[NativeMethods class]]];
+                                               interfaces:@{
+                                                   @"testService": [NativeMethods new],
+                                                   @"ioService": [IOSInterface new]
+                                               }];
     
 //    self.webView = [[JSBridgeWebView alloc] initUsingCacheWithFrame:rect configuration:nil];
     
@@ -59,9 +63,9 @@
 }
 
 - (void)nativeButtonClicked {
-    NSLog(@"点击了原生按钮");
+    NSLog(@"--- 点击了原生按钮");
     [self.webView invokeJSFunction:JS_CHANGE_COLOR params:@{@"color": [self Ox_randomColor]} completionHandler:^(id response, NSError *error) {
-        NSLog(@"回调: 原生调用JS方法完成.");
+        NSLog(@"--- Natice 执行 JS 方法完成.");
     }];
 }
 

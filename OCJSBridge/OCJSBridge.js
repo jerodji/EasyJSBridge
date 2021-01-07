@@ -5,39 +5,17 @@
     window.JSBridge = {
         __callbacks: {},
         __events: {},
-        _inject: function (obj, methods) {
-            let jsObj = {};
-            JSBridge[obj] = jsObj;
-            for (let i = 0 , l = methods.length; i < l; i++) {
-                let method = methods[i];
-                let jsMethod = method.replace(new RegExp(':', 'g'), '');
-                jsObj[jsMethod] = function () {
-                    return JSBridge._call(obj, method, Array.prototype.slice.call(arguments));
-                };
+        call: function (api = '', param = '', callback) {
+            let formatArgs = [api, param];
+            if (callback && typeof callback === 'function') {
+                const cbID = '__cb' + (+new Date) + Math.random();
+                JSBridge.__callbacks[cbID] = callback;
+                formatArgs.push(cbID);
+            } else {
+                formatArgs.push('');
             }
-        },
-        _call: function (obj, functionName, args) {
-            let formattedArgs = [];
-            for (let i = 0, l = args.length; i < l; i++) {
-                if (typeof args[i] == 'function') {
-                    formattedArgs.push('func');
-                    let cbID = '__cb' + (+new Date) + Math.random();
-                    JSBridge.__callbacks[cbID] = args[i];
-                    formattedArgs.push(cbID);
-                } else {
-                    formattedArgs.push('arg');
-                    formattedArgs.push(encodeURIComponent(args[i]));
-                }
-            }
-            let argStr = (formattedArgs.length > 0 ? ':' + encodeURIComponent(formattedArgs.join(':')) : '');
-            window.webkit.messageHandlers.NativeListener.postMessage(obj + ':' + encodeURIComponent(functionName) + argStr);
-
-            let ret = JSBridge.retValue;
-            JSBridge.retValue = undefined;
-
-            if (ret) {
-                return decodeURIComponent(ret);
-            }
+            const msg = JSON.stringify(formatArgs);
+            window.webkit.messageHandlers.NativeListener.postMessage(msg);
         },
         _invokeCallback: function (cbID, removeAfterExecute) {
             let args = Array.prototype.slice.call(arguments);
@@ -57,8 +35,8 @@
         registor: function (funcName, handler) {
             JSBridge.__events[funcName] = handler;
         },
-        _invokeJS: function (funcID, paramsJson) {
-            let handler = JSBridge.__events[funcID];
+        _invokeJS: function (funcName, paramsJson) {
+            let handler = JSBridge.__events[funcName];
             if (handler && typeof (handler) === 'function') {
                 let args = '';
                 try {
@@ -74,7 +52,7 @@
                     return handler(args);
                 }
             } else {
-                console.log(funcID + '函数未定义');
+                console.log(funcName + '函数未定义');
             }
         }
     };

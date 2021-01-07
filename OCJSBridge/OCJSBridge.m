@@ -7,7 +7,7 @@
 //
 
 #import "OCJSBridge.h"
-#import <objc/runtime.h>
+#import <objc/message.h>
 #import "NSObject+MJKeyValue.h"
 
 #pragma mark - JSBridge
@@ -40,67 +40,14 @@
 - (void)loadBridgeJS {
     if (!_bridgeJS) {
         NSError *error;
-        NSString * path = [[NSBundle mainBundle] pathForResource:@"JSBridge" ofType:@"js"];
+        NSString * path = [[NSBundle mainBundle] pathForResource:@"OCJSBridge" ofType:@"js"];
         NSString * injectjs = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:&error];
         if (!error && injectjs.length > 0) {
             _bridgeJS = injectjs;
         } else {
-            NSAssert(NO, @"*** JSBridge.js读取错误");
+            NSAssert(NO, @"*** OCJSBridge.js读取错误");
         }
     }
-}
-
-- (void)cacheWithInterfaces:(NSArray<Class>*)interfaces
-{
-    if (interfaces && [interfaces isKindOfClass:[NSArray class]] && interfaces.count > 0)
-    {
-        for(Class objCls in interfaces)
-        {
-            NSMutableString* injectString = [[NSMutableString alloc] init];
-            NSString *  objName = NSStringFromClass(objCls);
-            NSObject *  obj     = [[objCls alloc] init];
-            Class       cls     = objCls;
-            
-            // _inject: function (obj, methods) {}
-            [injectString appendString:@"JSBridge._inject(\""];
-            [injectString appendString:objName];
-            [injectString appendString:@"\", ["];
-            if ([obj isKindOfClass:[NSObject class]]) {
-                while (cls != [NSObject class]) {
-                    unsigned int mc = 0;
-                    Method * mlist = class_copyMethodList(cls, &mc);
-                    for (int i = 0; i < mc; i++) {
-                        [injectString appendString:@"\""];
-                        [injectString appendString:[NSString stringWithUTF8String:sel_getName(method_getName(mlist[i]))]];
-                        [injectString appendString:@"\""];
-                        if ((i != mc - 1) || (cls.superclass != [NSObject class])) {
-                            [injectString appendString:@", "];
-                        }
-                    }
-                    free(mlist);
-                    cls = cls.superclass;
-                }
-            }
-            [injectString appendString:@"]);"];
-            
-            [[JSBridge shared].cacheMap setObject:@[objCls, injectString] forKey:objName];
-            [[JSBridge shared].methodsInjectString appendString:injectString];
-        }   
-    }
-}
-
-- (NSMutableDictionary<NSString *,NSArray *> *)cacheMap {
-    if (!_cacheMap) {
-        _cacheMap = [NSMutableDictionary dictionary];
-    }
-    return _cacheMap;
-}
-
-- (NSMutableString *)methodsInjectString {
-    if (!_methodsInjectString) {
-        _methodsInjectString = [NSMutableString string];
-    }
-    return _methodsInjectString;
 }
 
 @end
@@ -111,102 +58,67 @@
 
 @implementation JSBridgeListener
 
-- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message {
+- (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)message
+{
+    if (![message.name isEqualToString:EASY_JS_MSG_HANDLER]) return;
     
-    NSMutableArray <JSBridgeDataFunction *>* _funcs = [NSMutableArray new];
-    NSMutableArray <NSString *>* _args = [NSMutableArray new];
-    
-    if ([message.name isEqualToString:EASY_JS_MSG_HANDLER]) {
-        __weak JSBridgeWebView *webView = (JSBridgeWebView *)message.webView;
-        NSString *requestString = [message body];
-        // native:testWithParams%3Acallback%3A:s%3Aabc%3Af%3A__cb1577786915804
-        NSArray *components = [requestString componentsSeparatedByString:@":"];
-        //NSLog(@"req: %@", requestString);
-        
-        NSString* obj = (NSString*)[components objectAtIndex:0];
-        NSString* method = [(NSString*)[components objectAtIndex:1] stringByRemovingPercentEncoding];
-        Class objClass = [[self.interfaces objectForKey:obj] objectAtIndex:0];
-        NSObject* interface = [[objClass alloc] init];
-        
-        // execute the interfacing method
-        SEL selector = NSSelectorFromString(method);
-        NSMethodSignature* sig = [interface methodSignatureForSelector:selector];
-        if (sig.numberOfArguments == 2 && components.count > 2) {
-            // 方法签名获取到实际实现的方法无参数 && js调用的方法带参数
-            NSString *assertDesc = [NSString stringWithFormat:@"*** -[%@ %@]: %@",NSStringFromClass([interface class]),method,@"oc的交互方法不带参数，但是js调用的方法传了参数"];
-            //  因为pod报警告，所以加上这句，实际没有意义
-            assertDesc = assertDesc ? : @"";
-            NSAssert(NO, assertDesc);
-            return;
-        }
-        if (!sig) {
-            NSString *assertDesc = [NSString stringWithFormat:@"*** -[%@ %@]:%@",NSStringFromClass([interface class]),method,@"method signature argument cannot be nil"];
-            NSAssert(NO, assertDesc);
-            return;
-        }
-        if (![interface respondsToSelector:selector]) {
-            NSAssert(NO, @"该方法未实现");
-            return;
-        }
-        
-        NSInvocation* invoker = [NSInvocation invocationWithMethodSignature:sig];
-        invoker.selector = selector;
-        invoker.target = interface;
-        if ([components count] > 2)
-        {
-            NSString *argsAsString = [(NSString*)[components objectAtIndex:2] stringByRemovingPercentEncoding];
-            NSArray* formattedArgs = [argsAsString componentsSeparatedByString:@":"];
-            if ((sig.numberOfArguments - 2) != [formattedArgs count] / 2) {
-                // 方法签名获取到实际实现的方法的参数个数 ≠ js调用方法时传参个数
-                NSString *assertDesc = [NSString stringWithFormat:@"*** -[%@ %@]: OC的交互方法参数个数%@，js调用方法时传参个数%@",NSStringFromClass([interface class]),method,@(sig.numberOfArguments - 2),@([formattedArgs count] / 2)];
-                assertDesc = assertDesc ? : @"";
-                NSAssert(NO, assertDesc);
-                return;
-            }
-            
-            for (unsigned long i = 0, j = 0, l = [formattedArgs count]; i < l; i+=2, j++){
-                
-                NSString* type = ((NSString*) [formattedArgs objectAtIndex:i]);
-                NSString* argStr = ((NSString*) [formattedArgs objectAtIndex:i + 1]);
-                
-                if ([type isEqualToString:@"func"]) {
-                    
-                    JSBridgeDataFunction *func = [[JSBridgeDataFunction alloc] initWithWebView:webView];
-                    func.funcID = argStr;
-                    [_funcs addObject:func];
-                    [invoker setArgument:&func atIndex:(j + 2)];
-                
-                } else if ([type isEqualToString:@"arg"]) {
-                    
-                    NSString* arg = [argStr stringByRemovingPercentEncoding];
-                    [_args addObject:arg];
-                    [invoker setArgument:&arg atIndex:(j + 2)];
-                }
-            }
-        }
-        [invoker retainArguments];
-        [invoker invoke];
-        
-        //return the value by using javascript
-        if ([sig methodReturnLength] > 0) {
-            __unsafe_unretained NSString* tmpRetValue;
-            [invoker getReturnValue:&tmpRetValue];
-            NSString *retValue = tmpRetValue;
-            
-            if (retValue == NULL || retValue == nil) {
-                [webView main_evaluateJavaScript:@"JSBridge.retValue=null;" completionHandler:nil];
-            } else {
-                retValue = [retValue stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet letterCharacterSet]];
-                retValue = [@"" stringByAppendingFormat:@"JSBridge.retValue=\"%@\";", retValue];
-                [webView main_evaluateJavaScript:retValue completionHandler:nil];
-            }
-        }
+    __weak JSBridgeWebView *webView = (JSBridgeWebView *)message.webView;
+    NSString *bodyJson = message.body; // exg: "[\"testService/testWithParams:callback:\",\"abc\",\"__cb16100015743360.8558109851298374\"]"
+    NSData *bodyData = [bodyJson dataUsingEncoding:NSUTF8StringEncoding];
+    NSError *err;
+    NSArray *bodyArr = [NSJSONSerialization JSONObjectWithData:bodyData options:kNilOptions error:&err];
+    if (err) {
+        return;
+    }
+    if (bodyArr.count < 3 ) {
+        NSAssert(NO, @"*** 传参不符合约定");
+        return;
     }
     
-    //clean up any retained funcs/args
-    [_funcs removeAllObjects];
-    [_args removeAllObjects];
+    NSString * api  = [bodyArr objectAtIndex:0];
+    NSArray * apiArr = [api componentsSeparatedByString:@"/"];
+    if (apiArr.count != 2) {
+        NSAssert(NO, @"*** 传参不符合约定");
+        return;
+    }
+    NSString * service  = [apiArr objectAtIndex:0];
+    NSString * method   = [apiArr objectAtIndex:1];
+    NSString * args = [bodyArr objectAtIndex:1];
+    NSString * cbID = [bodyArr objectAtIndex:2];
+    JSBridgeDataFunction *func = [[JSBridgeDataFunction alloc] initWithWebView:webView];
+    func.funcID = cbID;
     
+    if (!self.interfaces) {
+        return;
+    }
+    
+    NSObject * obj = [self.interfaces objectForKey:service];
+    if (!obj || ![obj isKindOfClass:[NSObject class]]) {
+        return;
+    }
+    
+    SEL sel = NSSelectorFromString(method);
+    
+    NSString * method1 = [method stringByAppendingString:@":"];
+    SEL sel1 = NSSelectorFromString(method1);
+    
+    NSString * method2 = [method stringByAppendingString:@"::"];
+    SEL sel2 = NSSelectorFromString(method2);
+    
+    SEL selector = sel;
+    if ([obj respondsToSelector:sel]) {
+        selector = sel;
+    } else if ([obj respondsToSelector:sel1]) {
+        selector = sel1;
+    } else if ([obj respondsToSelector:sel2]) {
+        selector = sel2;
+    } else {
+        NSString *msg = [NSString stringWithFormat:@"*** %@ %@ 方法没有实现", NSStringFromClass([obj class]), method];
+        NSAssert(NO, msg);
+        return;
+    }
+    
+    ((void(*)(id, SEL, id, id))objc_msgSend)(obj, selector, args, func);
 }
 
 @end

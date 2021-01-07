@@ -7,9 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "JSBridge.h"
+#import "OCJSBridge.h"
 
 @interface NativeMethods : NSObject
-- (void)testWithParams:(NSString*)_params callback:(JSBridgeDataFunction*)_callback;
-- (void)log:(NSString*)params;
+
+/// 这种方式定义接口是不行的, 因为机制原因`callback`无法匹配, 除非js入参就传入`testWithParams:callback:`
+- (void)testWithParams:(NSString*)json callback:(JSBridgeDataFunction*)func;
+
+/// 建议以这种方式定义接口名`testWithParams::`
+- (void)testWithParams:(NSString*)json :(JSBridgeDataFunction*)func;
+
+
 @end

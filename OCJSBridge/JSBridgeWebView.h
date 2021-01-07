@@ -15,12 +15,15 @@
 /// @param frame 位置
 /// @param configuration 配置
 /// @param interfaces JS 交互类
-- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration interfaces:(NSArray<Class>*)interfaces;
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration interfaces:(NSDictionary<NSString*, NSObject*>*)interfaces;
+
+
+/// native 调用 h5 方法
+- (void)invokeJSFunction:(NSString*)jsFuncName params:(id)params completionHandler:(void (^)(id response, NSError *error))completionHandler;
+
 
 /// 主线程执行js
 - (void)main_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler;
 
-/// native 调用 h5 方法
-- (void)invokeJSFunction:(NSString*)jsFuncName params:(id)params completionHandler:(void (^)(id response, NSError *error))completionHandler;
 
 @end
