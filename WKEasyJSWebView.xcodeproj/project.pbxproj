@@ -29,7 +29,7 @@
 		FA41D3B02590B1DD002EC091 /* OCJSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = FA41D3AF2590B1DD002EC091 /* OCJSBridge.m */; };
 		FA5CC32425919E35007638E1 /* OCJSBridge.js in Resources */ = {isa = PBXBuildFile; fileRef = FA5CC32325919E35007638E1 /* OCJSBridge.js */; };
 		FA7F9C3025A6075700B98F4D /* IOSInterface.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7F9C2F25A6075700B98F4D /* IOSInterface.m */; };
-		FAFFFEBC25A5C49700D295C5 /* JSBridgeWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */; };
+		FAB2FCD22643E580003B9E41 /* WKWebView+EasyJSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = FAB2FCD12643E580003B9E41 /* WKWebView+EasyJSBridge.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,8 +93,8 @@
 		FA5CC32325919E35007638E1 /* OCJSBridge.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = OCJSBridge.js; sourceTree = "<group>"; };
 		FA7F9C2E25A6075700B98F4D /* IOSInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOSInterface.h; sourceTree = "<group>"; };
 		FA7F9C2F25A6075700B98F4D /* IOSInterface.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IOSInterface.m; sourceTree = "<group>"; };
-		FAFFFEBA25A5C49700D295C5 /* JSBridgeWebView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JSBridgeWebView.h; sourceTree = "<group>"; };
-		FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JSBridgeWebView.m; sourceTree = "<group>"; };
+		FAB2FCD02643E580003B9E41 /* WKWebView+EasyJSBridge.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "WKWebView+EasyJSBridge.h"; sourceTree = "<group>"; };
+		FAB2FCD12643E580003B9E41 /* WKWebView+EasyJSBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "WKWebView+EasyJSBridge.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -154,8 +154,8 @@
 		881045EE2302A49B00C7BD76 /* OCJSBridge */ = {
 			isa = PBXGroup;
 			children = (
-				FAFFFEBA25A5C49700D295C5 /* JSBridgeWebView.h */,
-				FAFFFEBB25A5C49700D295C5 /* JSBridgeWebView.m */,
+				FAB2FCD02643E580003B9E41 /* WKWebView+EasyJSBridge.h */,
+				FAB2FCD12643E580003B9E41 /* WKWebView+EasyJSBridge.m */,
 				FA41D3AE2590B1DD002EC091 /* OCJSBridge.h */,
 				FA41D3AF2590B1DD002EC091 /* OCJSBridge.m */,
 				FA5CC32325919E35007638E1 /* OCJSBridge.js */,
@@ -356,11 +356,11 @@
 				881045FE2302BD5300C7BD76 /* NativeMethods.m in Sources */,
 				88C3154023B9DA0800E14897 /* MJPropertyType.m in Sources */,
 				881045A72302A39000C7BD76 /* ViewController.m in Sources */,
-				FAFFFEBC25A5C49700D295C5 /* JSBridgeWebView.m in Sources */,
 				88C3154223B9DA0800E14897 /* MJProperty.m in Sources */,
 				88C3154523B9DA0800E14897 /* NSObject+MJProperty.m in Sources */,
 				88C3154623B9DA0800E14897 /* NSObject+MJClass.m in Sources */,
 				88C3154423B9DA0800E14897 /* MJExtensionConst.m in Sources */,
+				FAB2FCD22643E580003B9E41 /* WKWebView+EasyJSBridge.m in Sources */,
 				FA1A3F49258F583400384BC0 /* JSMethods.m in Sources */,
 				881045B22302A39300C7BD76 /* main.m in Sources */,
 				88C3154723B9DA0800E14897 /* NSString+MJExtension.m in Sources */,

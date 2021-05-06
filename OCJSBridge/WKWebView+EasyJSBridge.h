@@ -1,15 +1,17 @@
 //
-//  JSBridgeWebView.h
+//  WKWebView+EasyJSBridge.h
 //  WKEasyJSWebView
 //
-//  Created by Jerod on  2020/12/21.
+//  Created by Jerod on 2021/5/6.
 //  Copyright © 2021 JIJIUDONG. All rights reserved.
 //
 
 #import <WebKit/WebKit.h>
 
 
-@interface JSBridgeWebView : WKWebView
+
+@interface WKWebView (EasyJSBridge)
+
 
 /// 初始化
 /// @param frame 位置
@@ -23,7 +25,9 @@
 
 
 /// 主线程执行js
-- (void)main_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler;
+- (void)mainThreadEvaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler;
 
 
 @end
+
+

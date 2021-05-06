@@ -62,7 +62,7 @@
 {
     if (![message.name isEqualToString:EASY_JS_MSG_HANDLER]) return;
     
-    __weak JSBridgeWebView *webView = (JSBridgeWebView *)message.webView;
+    __weak WKWebView *webView = (WKWebView *)message.webView;
     NSString *bodyJson = message.body; // exg: "[\"testService/testWithParams:callback:\",\"abc\",\"__cb16100015743360.8558109851298374\"]"
     NSData *bodyData = [bodyJson dataUsingEncoding:NSUTF8StringEncoding];
     NSError *err;
@@ -127,7 +127,7 @@
 
 @implementation JSBridgeDataFunction
 
-- (instancetype)initWithWebView:(JSBridgeWebView *)webView {
+- (instancetype)initWithWebView:(WKWebView *)webView {
     self = [super init];
     if (self) {
         _webView = webView;
@@ -174,7 +174,7 @@
     [injection appendString:@");"];
     
     if (_webView){
-        [_webView main_evaluateJavaScript:injection completionHandler:^(id response, NSError *error) {
+        [_webView mainThreadEvaluateJavaScript:injection completionHandler:^(id response, NSError *error) {
             if (completionHandler) {completionHandler(response, error);}
         }];
     }

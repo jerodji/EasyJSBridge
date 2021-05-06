@@ -1,16 +1,16 @@
 //
-//  JSBridgeWebView.m
+//  WKWebView+EasyJSBridge.m
 //  WKEasyJSWebView
 //
-//  Created by Jerod on  2020/12/21.
+//  Created by Jerod on 2021/5/6.
 //  Copyright © 2021 JIJIUDONG. All rights reserved.
 //
 
-#import "JSBridgeWebView.h"
+#import "WKWebView+EasyJSBridge.h"
 #import "OCJSBridge.h"
 #import "NSObject+MJKeyValue.h"
 
-@implementation JSBridgeWebView
+@implementation WKWebView (EasyJSBridge)
 
 /**
  初始化WKWwebView,并将交互类的方法注入JS
@@ -28,7 +28,7 @@
     [configuration.userContentController addScriptMessageHandler:listener name:EASY_JS_MSG_HANDLER];
     
     
-    self = [super initWithFrame:frame configuration:configuration];
+    self = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
     if (self) {
     }
     return self;
@@ -48,11 +48,11 @@
      paramJson = [paramJson stringByReplacingOccurrencesOfString:@"\u2029" withString:@"\\u2029"];
     
     NSString *script = [NSString stringWithFormat:@"%@('%@', '%@')", @"window.JSBridge._invokeJS", jsFuncName,  paramJson];
-    [self main_evaluateJavaScript:script completionHandler:completionHandler];
+    [self mainThreadEvaluateJavaScript:script completionHandler:completionHandler];
 }
 
 
-- (void)main_evaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler {
+- (void)mainThreadEvaluateJavaScript:(NSString *)javaScriptString completionHandler:(void (^)(id, NSError *))completionHandler {
     
     if ([NSThread isMainThread]) {
         [self evaluateJavaScript:javaScriptString completionHandler:^(id _Nullable response, NSError * _Nullable error) {

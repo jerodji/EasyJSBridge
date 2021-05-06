@@ -14,8 +14,10 @@
 #import "IOSInterface.h"
 #import "JSMethods.h"
 
+#import "WKWebView+EasyJSBridge.h"
+
 @interface ViewController ()<WKNavigationDelegate>
-@property (nonatomic, strong) JSBridgeWebView *webView;
+@property (nonatomic, strong) WKWebView *webView;
 @end
 
 @implementation ViewController
@@ -27,7 +29,7 @@
     CGRect rect = CGRectMake(20, 88, self.view.bounds.size.width-40, self.view.bounds.size.height-300);
 //    self.webView = [[JSBridgeWebView alloc] initWithFrame:rect configuration:[WKWebViewConfiguration new] scripts:nil javascriptInterfaces:@{@"native":[NativeMethods new]}];
     
-    self.webView = [[JSBridgeWebView alloc] initWithFrame:rect
+    self.webView = [[WKWebView alloc] initWithFrame:rect
                                             configuration:[[WKWebViewConfiguration alloc] init]
                                                interfaces:@{
                                                    @"testService": [NativeMethods new],

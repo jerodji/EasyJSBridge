@@ -7,7 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "JSBridgeWebView.h"
+//#import "JSBridgeWebView.h"
+#import "WKWebView+EasyJSBridge.h"
 
 static NSString * const EASY_JS_MSG_HANDLER = @"NativeListener";
 
@@ -40,10 +41,10 @@ static NSString * const EASY_JS_MSG_HANDLER = @"NativeListener";
 @interface JSBridgeDataFunction : NSObject
 
 @property (nonatomic, copy) NSString* funcID;
-@property (nonatomic, strong) JSBridgeWebView *webView;
+@property (nonatomic, strong) WKWebView *webView;
 @property (nonatomic, assign) BOOL removeAfterExecute;
 
-- (instancetype)initWithWebView:(JSBridgeWebView*)webView;
+- (instancetype)initWithWebView:(WKWebView*)webView;
 
 // 回调JS
 - (void)execute:(void (^)(id response, NSError* error))completionHandler;
