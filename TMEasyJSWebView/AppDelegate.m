@@ -7,7 +7,7 @@
 //
 
 #import "AppDelegate.h"
-#import "OCJSBridge.h"
+#import "RuntimeJSBridge.h"
 #import "NativeMethods.h"
 
 @interface AppDelegate ()

@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "OCJSBridge.h"
+#import "RuntimeJSBridge.h"
 
 @interface IOSInterface : NSObject
 

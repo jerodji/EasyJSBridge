@@ -15,17 +15,15 @@
                 formatArgs.push('');
             }
             const msg = JSON.stringify(formatArgs);
-            window.webkit.messageHandlers.NativeListener.postMessage(msg);
+            window.webkit.messageHandlers.JSBridgeListener.postMessage(msg);
         },
-        _invokeCallback: function (cbID, removeAfterExecute) {
+        _callback: function (cbID, removeAfterExecute) {
             let args = Array.prototype.slice.call(arguments);
             args.shift();
             args.shift();
-
             for (let i = 0, l = args.length; i < l; i++) {
                 args[i] = decodeURIComponent(args[i]);
             }
-
             let cb = JSBridge.__callbacks[cbID];
             if (removeAfterExecute) {
                 JSBridge.__callbacks[cbID] = undefined;

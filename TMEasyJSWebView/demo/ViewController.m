@@ -7,14 +7,13 @@
 //
 
 #import "ViewController.h"
-#import "MJExtension.h"
 
-#import "OCJSBridge.h"
+#import "WKWebView+RuntimeJSBridge.h"
+
 #import "NativeMethods.h"
 #import "IOSInterface.h"
 #import "JSMethods.h"
 
-#import "WKWebView+EasyJSBridge.h"
 
 @interface ViewController ()<WKNavigationDelegate>
 @property (nonatomic, strong) WKWebView *webView;
@@ -27,17 +26,15 @@
     self.view.backgroundColor = [UIColor lightGrayColor];
     
     CGRect rect = CGRectMake(20, 88, self.view.bounds.size.width-40, self.view.bounds.size.height-300);
-//    self.webView = [[JSBridgeWebView alloc] initWithFrame:rect configuration:[WKWebViewConfiguration new] scripts:nil javascriptInterfaces:@{@"native":[NativeMethods new]}];
-    
+
     self.webView = [[WKWebView alloc] initWithFrame:rect
-                                            configuration:[[WKWebViewConfiguration alloc] init]
-                                               interfaces:@{
-                                                   @"testService": [NativeMethods new],
-                                                   @"ioService": [IOSInterface new]
-                                               }];
-    
-//    self.webView = [[JSBridgeWebView alloc] initUsingCacheWithFrame:rect configuration:nil];
-    
+                                      configuration:[[WKWebViewConfiguration alloc] init]
+                                       listenerName:@"JSBridgeListener" // iOS,安卓,前端 三端保持一致
+                                           services:@{
+                                             @"testService": [NativeMethods new],
+                                             @"ioService": [IOSInterface new]
+                                           }];
+        
     self.webView.navigationDelegate = self;
    [self.view addSubview:self.webView];
     
@@ -65,9 +62,10 @@
 }
 
 - (void)nativeButtonClicked {
-    NSLog(@"--- 点击了原生按钮");
-    [self.webView invokeJSFunction:JS_CHANGE_COLOR params:@{@"color": [self Ox_randomColor]} completionHandler:^(id response, NSError *error) {
-        NSLog(@"--- Natice 执行 JS 方法完成.");
+    NSLog(@"--- native: 主动调用JS divChangeColor方法");
+    // MARK: 主动调用JS
+    [self.webView invokeJSFunction:@"divChangeColor" params:@{@"color": [self Ox_randomColor]} completionHandler:^(id response, NSError *error) {
+        NSLog(@"--- native: 执行 JS 方法完成.");
     }];
 }
 

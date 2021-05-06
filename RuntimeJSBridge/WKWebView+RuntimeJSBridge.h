@@ -1,8 +1,8 @@
 //
-//  WKWebView+EasyJSBridge.h
+//  WKWebView+RuntimeJSBridge.h
 //  WKEasyJSWebView
 //
-//  Created by Jerod on 2021/5/6.
+//  Created by Jerod on 2019/8/13.
 //  Copyright © 2021 JIJIUDONG. All rights reserved.
 //
 
@@ -17,7 +17,7 @@
 /// @param frame 位置
 /// @param configuration 配置
 /// @param interfaces JS 交互类
-- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration interfaces:(NSDictionary<NSString*, NSObject*>*)interfaces;
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration listenerName:(NSString*)listenerName services:(NSDictionary<NSString*, NSObject*>*)interfaces;
 
 
 /// native 调用 h5 方法

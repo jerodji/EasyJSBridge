@@ -1,36 +1,36 @@
 //
-//  WKWebView+EasyJSBridge.m
+//  WKWebView+RuntimeJSBridge.m
 //  WKEasyJSWebView
 //
-//  Created by Jerod on 2021/5/6.
+//  Created by Jerod on 2019/8/13.
 //  Copyright © 2021 JIJIUDONG. All rights reserved.
 //
 
-#import "WKWebView+EasyJSBridge.h"
-#import "OCJSBridge.h"
-#import "NSObject+MJKeyValue.h"
+#import "WKWebView+RuntimeJSBridge.h"
+#import "RuntimeJSBridge.h"
+#import "NSObject+JsonString.h"
 
 @implementation WKWebView (EasyJSBridge)
 
 /**
  初始化WKWwebView,并将交互类的方法注入JS
  */
-- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration interfaces:(NSDictionary<NSString*, NSObject*>*)interfaces
+- (instancetype)initWithFrame:(CGRect)frame configuration:(WKWebViewConfiguration*)configuration listenerName:(NSString*)listenerName services:(NSDictionary<NSString*, NSObject*>*)interfaces
 {
-    // 注入桥接js
     if (!configuration) configuration = [[WKWebViewConfiguration alloc] init];
     if (!configuration.userContentController) configuration.userContentController = [[WKUserContentController alloc] init];
-    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:[OCJSBridge shared].bridgeJS injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
-        
+    
+    // 注入桥接js
+    NSString * BridgeJS = [NSString stringWithFormat:BRIDGE_JS_FORMAT, listenerName];
+    [configuration.userContentController addUserScript:[[WKUserScript alloc] initWithSource:BridgeJS injectionTime:WKUserScriptInjectionTimeAtDocumentStart forMainFrameOnly:YES]];
+    
     // 添加js发送信息监听者
     JSBridgeListener *listener = [[JSBridgeListener alloc] init];
     listener.interfaces = interfaces;
-    [configuration.userContentController addScriptMessageHandler:listener name:EASY_JS_MSG_HANDLER];
+    listener.name = listenerName;
+    [configuration.userContentController addScriptMessageHandler:listener name:listenerName];
     
-    
-    self = [[WKWebView alloc] initWithFrame:frame configuration:configuration];
-    if (self) {
-    }
+    self = [self initWithFrame:frame configuration:configuration];
     return self;
 }
 
@@ -38,7 +38,7 @@
 - (void)invokeJSFunction:(NSString*)jsFuncName params:(id)params completionHandler:(void (^)(id response, NSError *error))completionHandler {
     
     NSString *paramJson = @"";
-    if (params) {  paramJson = [params mj_JSONString]; }
+    if (params) {  paramJson = [params JSONString]; }
      paramJson = [paramJson stringByReplacingOccurrencesOfString:@"\\" withString:@"\\\\"];
      paramJson = [paramJson stringByReplacingOccurrencesOfString:@"\"" withString:@"\\\""];
      paramJson = [paramJson stringByReplacingOccurrencesOfString:@"\n" withString:@"\\n"];

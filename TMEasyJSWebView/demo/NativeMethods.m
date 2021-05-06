@@ -7,7 +7,6 @@
 //
 
 #import "NativeMethods.h"
-#import "MJExtension.h"
 
 @implementation NativeMethods
 
@@ -22,7 +21,7 @@
     NSString* p3 = @"param_p3";
     NSArray* nativeParams = @[p1, p2, p3];
     //回调h5
-    [func executeWithParams:nativeParams completionHandler:^(id response, NSError *error) {
+    [func callbackJSWithParams:nativeParams completionHandler:^(id response, NSError *error) {
         NSLog(@"completionHandler");
     }];
 }
@@ -37,7 +36,7 @@
     NSString* p3 = @"param_p3";
     NSArray* nativeParams = @[p1, p2, p3];
     //回调h5
-    [func executeWithParams:nativeParams completionHandler:^(id response, NSError *error) {
+    [func callbackJSWithParams:nativeParams completionHandler:^(id response, NSError *error) {
         NSLog(@">>> 3 : Native 回调 JS 完成");
     }];
 }
